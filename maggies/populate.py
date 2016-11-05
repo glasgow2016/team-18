@@ -1,11 +1,11 @@
 import os
-from django.contrib.auth.models import User
 
 def populate():
-    super_user = User.objects.create_user('test', 'test@test.com', 'test')
-    super_user.is_superuser = True
-    super_user.is_staff = True
-    super_user.save()
+    if not User.objects.filter(username="test").exists():
+        super_user = User.objects.create_user('test', 'test@test.com', 'test')
+        super_user.is_superuser = True
+        super_user.is_staff = True
+        super_user.save()
 
     lung_site = add_cancer_site("Lung")
     booked_nature = add_visit_nature("Booked")
@@ -13,8 +13,8 @@ def populate():
 
     add_visitor(isNew=True, gender="M", natureOfVisit=booked_nature)
 
-def add_visitor(isNew, gender, cancerSite, natureOfVisit):
-    p = Visitor.objects.get_or_create(category=cat, title=title, url=url, views=views)[0]
+def add_visitor(isNew, gender, natureOfVisit):
+    p = Visitor.objects.get_or_create(is_new_visitor=isNew, gender=gender, nature_of_visit=natureOfVisit)[0]
     return p
 
 def add_cancer_site(name):
@@ -32,5 +32,9 @@ def add_journey_stage(stage):
 if __name__ == '__main__':
     print("Starting population script...")
     os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'maggies.settings')
+    from django.core.wsgi import get_wsgi_application
+    application = get_wsgi_application()
     from maggies.models import Visitor, CancerSite, VisitNature, JourneyStage
+    from django.contrib.auth.models import User
+    from django.conf import settings
     populate()
