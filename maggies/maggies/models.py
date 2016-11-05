@@ -23,18 +23,15 @@ class Visitor(models.Model):
     gender = models.CharField(max_length=1, choices=GENDER_CHOICES)
     nature_of_visit = models.ForeignKey(VisitNature)
 
-class PwC(models.Model): # Extends Visitor
-    visitor_id = models.ForeignKey(Visitor)
+class PwC(Visitor):
     cancer_site = models.ForeignKey(CancerSite)
     journey_stage = models.ForeignKey(JourneyStage)
 
-class Carer(models.Model): # Extends Visitor
-    visitor_id = models.ForeignKey(Visitor)
-    caring_for = models.ForeignKey(PwC)
+class Carer(Visitor):
+    caring_for = models.ManyToManyField(PwC)
     relationship = models.CharField(max_length=256)
 
-class OtherVisitor(models.Model): # Extends Visitor
-    visitor_id = models.ForeignKey(Visitor)
+class OtherVisitor(Visitor):
     description = models.CharField(max_length=256)
 
 # NOTE & TODO: Flush this table every day at, say 02:00
