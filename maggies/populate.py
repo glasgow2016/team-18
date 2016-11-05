@@ -7,6 +7,7 @@ def populate():
         super_user.is_staff = True
         super_user.save()
 
+    # Cancer Site values
     lung_site = add_cancer_site("Lung")
     breast_site = add_cancer_site("Breast")
     lowergi_site = add_cancer_site("Lower GI")
@@ -26,6 +27,7 @@ def populate():
     urolog_site = add_cancer_site("Urolog")
     notstated_site = add_cancer_site("Not Stated")
 
+    # Visit Nature values
     booked_nature = add_visit_nature("Booked")
     dropin_nature = add_visit_nature("Drop-In")
     programme_nature = add_visit_nature("Programme")
@@ -34,7 +36,7 @@ def populate():
     fundraising_nature = add_visit_nature("Fundraising")
     outreach_nature = add_visit_nature("Outreach")
 
-
+    # Journey Stage values
     prediagnosis_stage = add_journey_stage("Pre-Diagnosis")
     curativeintent_stage = add_journey_stage("Curative Intent")
     posttreatement_curativeintent_stage = add_journey_stage("Post Treatment - Curative Intent")
@@ -43,7 +45,9 @@ def populate():
     bereaved_stage = add_journey_stage("Bereaved")
     notstated_stage = add_journey_stage("Not Stated")
 
-    add_pwc(cancerSite=sarcoma_site, journeyStage=curativeintent_stage, isNew=True, gender="M", natureOfVisit=booked_nature)
+    #add_pwc(cancerSite=sarcoma_site, journeyStage=curativeintent_stage, isNew=True, gender="M", natureOfVisit=booked_nature)
+    PwC.objects.get_or_create(sarcoma_site, curativeintent_stage, True, "M", booked_nature)
+
 
 def add_pwc(cancerSite, journeyStage, isNew, gender, natureOfVisit):
     p = PwC.objects.get_or_create(cancer_site=cancerSite,
@@ -79,6 +83,17 @@ def add_visit_nature(nature):
 def add_journey_stage(stage):
     j = JourneyStage.objects.get_or_create(stage=stage)[0]
     return j
+
+def add_staff_member(user, first_name, surname, role, work_location, clearance_level, assisted):
+    p = StaffMember.objects.get_or_create(user=user,
+                                    first_name=first_name,
+                                    surname=surname,
+                                    role=role,
+                                    work_location=work_location,
+                                    clearance_level=clearance_level,
+                                    assisted=assisted)[0]
+    return p
+
 
 if __name__ == '__main__':
     print("Starting population script...")
