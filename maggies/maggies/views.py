@@ -79,7 +79,7 @@ def login_page(request):
                 return redirect(request.POST.get('next', '/'))
             else:
                 # No backend authenticated the credentials
-                context = {"showError": True, "message": "Login details are incorrect."}
+                context = {"showError": True, "message": "Login Failed - Please try again."}
                 return render(request, "login.html", context)
         else:
             print("check failed")
