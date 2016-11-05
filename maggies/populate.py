@@ -11,7 +11,7 @@ def populate():
     booked_nature = add_visit_nature("Booked")
     prediagnosis_stage = add_journey_stage("Pre-Diagnosis")
 
-    add_visitor(isNew=True, gender="M", cancerSite=lung_site, natureOfVisit=booked_nature)
+    add_visitor(isNew=True, gender="M", natureOfVisit=booked_nature)
 
 def add_visitor(isNew, gender, cancerSite, natureOfVisit):
     p = Visitor.objects.get_or_create(category=cat, title=title, url=url, views=views)[0]
