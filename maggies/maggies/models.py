@@ -12,22 +12,36 @@ GENDER_CHOICES = (
 class VisitNature(models.Model):
     nature = models.CharField(max_length=256)
 
+    def __unicode__():
+        return nature
+
 class CancerSite(models.Model):
     name = models.CharField(max_length=256)
 
+    def __unicode__():
+        return name
+
 class JourneyStage(models.Model):
     stage = models.CharField(max_length=256)
+
+    def __unicode__():
+        return stage
 
 class Visitor(models.Model):
     is_new_visitor = models.BooleanField()
     gender = models.CharField(max_length=1, choices=GENDER_CHOICES)
     nature_of_visit = models.ForeignKey(VisitNature)
 
-class PwC(Visitor):
+class CancerInfo(models.Model):
     cancer_site = models.ForeignKey(CancerSite)
     journey_stage = models.ForeignKey(JourneyStage)
 
+class PwC(Visitor):
+    cancer_info = models.ForeignKey(CancerInfo)
+
 class Carer(Visitor):
+    pwc_cancer_info = models.ForeignKey(CancerInfo)
+    pwc_present = models.BooleanField()
     caring_for = models.ManyToManyField(PwC)
     relationship = models.CharField(max_length=256)
 
