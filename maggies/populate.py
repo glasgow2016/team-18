@@ -1,6 +1,12 @@
 import os
+from django.contrib.auth.models import User
 
 def populate():
+    super_user = User.objects.create_user('test', 'test@test.com', 'test')
+    super_user.is_superuser = True
+    super_user.is_staff = True
+    super_user.save()
+
     lung_site = add_cancer_site("Lung")
     booked_nature = add_visit_nature("Booked")
     prediagnosis_stage = add_journey_stage("Pre-Diagnosis")
@@ -24,7 +30,7 @@ def add_journey_stage(stage):
     return j
 
 if __name__ == '__main__':
-    print "Starting population script..."
+    print("Starting population script...")
     os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'maggies.settings')
     from maggies.models import Visitor, CancerSite, VisitNature, JourneyStage
     populate()

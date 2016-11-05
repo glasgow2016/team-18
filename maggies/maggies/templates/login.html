@@ -4,41 +4,25 @@
 {% block extra-css %}
 {% endblock %}
 
-
 {% block content %}
-    <div class="container">
-        <!-- Example row of columns -->
-
         <div class="row">
             <div class="col-md-12">
-
+                {% if showError %}
+                <h3>YOUR DEETS ARE WRONG</h3>
+                <h4>{{ message }}</h4>
+                {% endif %}
+                <form action="" method="post">
+                  {% csrf_token %}
+                  <div class="form-group">
+                    <input type="text" placeholder="Email" name="username" class="form-control">
+                  </div>
+                  <div class="form-group">
+                    <input type="password" placeholder="Password" name="password" class="form-control">
+                  </div>
+                  <button type="submit" class="btn btn-success">Sign in</button>
+                </form>
             </div>
         </div>
-
-        <div class="row">
-            <div class="col-md-4">
-                <h2>Heading</h2>
-                <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
-                <p><a class="btn btn-default" href="#" role="button">View details &raquo;</a></p>
-            </div>
-            <div class="col-md-4">
-                <h2>Heading</h2>
-                <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
-                <p><a class="btn btn-default" href="#" role="button">View details &raquo;</a></p>
-            </div>
-            <div class="col-md-4">
-                <h2>Heading</h2>
-                <p>Donec sed odio dui. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Vestibulum id ligula porta felis euismod semper. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus.</p>
-                <p><a class="btn btn-default" href="#" role="button">View details &raquo;</a></p>
-            </div>
-        </div>
-
-        <hr>
-
-        <footer>
-            <p>&copy; 2016 Company, Inc.</p>
-        </footer>
-    </div> <!-- /container -->
 {% endblock %}
 
 {% block extra-js %}
