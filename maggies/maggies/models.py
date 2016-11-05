@@ -43,15 +43,15 @@ class DailyIdentifier(models.Model):
     time_first_seen = models.DateTimeField()
     visitor = models.OneToOneField(Visitor)
 
+class StaffRole(models.Model):
+    description = models.CharField(max_length=256)
+
 class StaffMember(models.Model):
     name = models.CharField(max_length=256)
     surname = models.CharField(max_length=256)
     account_id = models.IntegerField(unique=True)
     role = models.ForeignKey(StaffRole, on_delete=models.PROTECT)
     assisted = models.ManyToManyField(Visitor)
-
-class StaffRole(models.Model):
-    description = models.CharField(max_length=256)
 
 class Activity(models.Model):
     name = models.CharField(max_length=256)
