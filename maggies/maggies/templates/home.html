@@ -14,7 +14,7 @@
               {% if field.errors %}
                   <div class="form-group has-error">
                       <label class="col-sm-4 control-label" for="id_{{ field.name }}">{{ field.label }}</label>
-                      <div class="col-sm-8">
+                      <div class="col-sm-8 {% if field.label == 'First visit?' %}checkbox-style{% endif %}">
                           {{ field|attr:"class:form-control" }}
                           <span class="help-block">
                               {% for error in  field.errors %}{{ error }}{% endfor %}
