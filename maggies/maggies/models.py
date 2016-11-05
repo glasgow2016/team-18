@@ -9,11 +9,11 @@ GENDER_CHOICES = (
     (OTHER, 'Other'),
 )
 
-class CancerSite(models.Model):
-    name = models.CharField(max_length=256)
-
 class VisitNature(models.Model):
     nature = models.CharField(max_length=256)
+
+class CancerSite(models.Model):
+    name = models.CharField(max_length=256)
 
 class JourneyStage(models.Model):
     stage = models.CharField(max_length=256)
@@ -21,22 +21,37 @@ class JourneyStage(models.Model):
 class Visitor(models.Model):
     is_new_visitor = models.BooleanField()
     gender = models.CharField(max_length=1, choices=GENDER_CHOICES)
-    cancer_site = models.ForeignKey(CancerSite)
     nature_of_visit = models.ForeignKey(VisitNature)
+
+class PwC(models.Model): # Extends Visitor
+    visitor_id = models.ForeignKey(Visitor)
+    cancer_site = models.ForeignKey(CancerSite)
     journey_stage = models.ForeignKey(JourneyStage)
 
+class Carer(models.Model): # Extends Visitor
+    visitor_id = models.ForeignKey(Visitor)
+    caring_for = models.ForeignKey(PwC)
+    relationship = models.CharField(max_length=256)
+
+class OtherVisitor(models.Model): # Extends Visitor
+    visitor_id = models.ForeignKey(Visitor)
+    description = models.CharField(max_length=256)
+
+# NOTE & TODO: Flush this table every day at, say 02:00
 class DailyIdentifier(models.Model):
     first_name = models.CharField(max_length=256)
     time_first_seen = models.DateTimeField()
     visitor = models.OneToOneField(Visitor)
 
-class StaffDescription(models.Model):
-    description = models.CharField(max_length=256)
-
 class StaffMember(models.Model):
     name = models.CharField(max_length=256)
     surname = models.CharField(max_length=256)
-    description = models.ForeignKey(StaffDescription, on_delete=models.PROTECT)
+    account_id = models.IntegerField(unique=True)
+    role = models.ForeignKey(StaffRole, on_delete=models.PROTECT)
+    assisted = models.ManyToManyField(Visitor)
+
+class StaffRole(models.Model):
+    description = models.CharField(max_length=256)
 
 class Activity(models.Model):
     name = models.CharField(max_length=256)
