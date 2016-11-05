@@ -12,11 +12,20 @@ GENDER_CHOICES = (
 class VisitNature(models.Model):
     nature = models.CharField(max_length=256)
 
+    def __unicode__():
+        return nature
+
 class CancerSite(models.Model):
     name = models.CharField(max_length=256)
 
+    def __unicode__():
+        return name
+
 class JourneyStage(models.Model):
     stage = models.CharField(max_length=256)
+
+    def __unicode__():
+        return stage
 
 class Visitor(models.Model):
     is_new_visitor = models.BooleanField()
