@@ -43,14 +43,15 @@ def populate():
     bereaved_stage = add_journey_stage("Bereaved")
     notstated_stage = add_journey_stage("Not Stated")
 
-    add_pwc(cancerSite=sarcoma_site, journeyStage=curativeintent_stage, isNew=True, gender="M", natureOfVisit=booked_nature)
+    add_pwc(cancerInfo=add_cancer_info(sarcoma_site, curativeintent_stage), isNew=True, gender="M", natureOfVisit=booked_nature)
 
-def add_pwc(cancerSite, journeyStage, isNew, gender, natureOfVisit):
-    p = PwC.objects.get_or_create(cancer_site=cancerSite,
-                                    journey_stage=journeyStage,
-                                    is_new_visitor=isNew,
-                                    gender=gender,
-                                    nature_of_visit=natureOfVisit)[0]
+def add_pwc(cancerInfo, isNew, gender, natureOfVisit):
+    v = Visitor.objects.get_or_create(is_new_visitor=isNew,
+                                        gender=gender,
+                                        nature_of_visit=natureOfVisit)[0]
+
+    p = PwC.objects.get_or_create(cancer_info=cancerInfo,
+                                    visitor=v)[0]
     return p
 
 def add_carer(caringFor, relationship, isNew, gender, natureOfVisit):
@@ -67,6 +68,11 @@ def add_othervisitor(description, isNew, gender, natureOfVisit):
                                     gender=gender,
                                     nature_of_visit=natureOfVisit)[0]
     return p
+
+def add_cancer_info(cancerSite, journeyStage):
+    c = CancerInfo.objects.get_or_create(cancer_site=cancerSite,
+                                        journey_stage=journeyStage)[0]
+    return c
 
 def add_cancer_site(name):
     c = CancerSite.objects.get_or_create(name=name)[0]
@@ -85,7 +91,7 @@ if __name__ == '__main__':
     os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'maggies.settings')
     from django.core.wsgi import get_wsgi_application
     application = get_wsgi_application()
-    from maggies.models import Visitor, CancerSite, VisitNature, JourneyStage, PwC, Carer, OtherVisitor
+    from maggies.models import Visitor, CancerSite, VisitNature, JourneyStage, PwC, Carer, OtherVisitor, CancerInfo
     from django.contrib.auth.models import User
     from django.conf import settings
     populate()

@@ -37,16 +37,19 @@ class CancerInfo(models.Model):
     cancer_site = models.ForeignKey(CancerSite)
     journey_stage = models.ForeignKey(JourneyStage)
 
-class PwC(Visitor):
+class PwC(models.Model):
+    visitor = models.OneToOneField(Visitor)
     cancer_info = models.ForeignKey(CancerInfo)
 
-class Carer(Visitor):
+class Carer(models.Model):
+    visitor = models.OneToOneField(Visitor)
     pwc_cancer_info = models.ForeignKey(CancerInfo)
     pwc_present = models.BooleanField()
     caring_for = models.ManyToManyField(PwC)
     relationship = models.CharField(max_length=256)
 
-class OtherVisitor(Visitor):
+class OtherVisitor(models.Model):
+    visitor = models.OneToOneField(Visitor)
     description = models.CharField(max_length=256)
 
 # NOTE & TODO: Flush this table every day at, say 02:00
