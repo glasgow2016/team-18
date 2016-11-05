@@ -1,8 +1,9 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 from .forms import VisitorForm, PWC, CARER, OTHER
 from .models import PwC, Carer, OtherVisitor, CancerInfo, Visitor
+
 
 @login_required
 def home(request):
@@ -84,3 +85,20 @@ def login_page(request):
             print("check failed")
     print("Falling back to basic page")
     return render(request, "login.html")
+
+@login_required
+def logout_page(request):
+    logout(request)
+    return redirect('/')
+
+@login_required
+def reports(request):
+    return render(request, "reports.html")
+
+@login_required
+def recent(request):
+    return render(request, "recent.html")
+
+@login_required
+def activities(request):
+    return render(request, "activities.html")
