@@ -20,5 +20,9 @@ from maggies import views
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^login/', views.login_page),
+    url(r'^logout/', views.logout_page),
+    url(r'^reports/', views.reports),
+    url(r'^recent/', views.recent),
+    url(r'^activities/', views.activities),
     url(r'^', views.home),
 ]

@@ -1,10 +1,21 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
+from .forms import VisitorForm
 
 @login_required
 def home(request):
-    return render(request, "home.html")
+    if request.method=="POST":
+        form = VisitorForm(request.POST)
+        if form.is_valid():
+            print("Form is valid.")
+            return render(request, "home.html")
+        else:
+            print("Form is not valid.")
+
+    form = VisitorForm()
+    return render(request, "home.html", {"form": form})
+
 
 def login_page(request):
     if request.method == "POST":
@@ -24,5 +35,19 @@ def login_page(request):
     print("Falling back to basic page")
     return render(request, "login.html")
 
-def data_form(request):
-    return render(request, "data-form.html")
+@login_required
+def logout_page(request):
+    logout(request)
+    return redirect('/')
+
+@login_required
+def reports(request):
+    return render(request, "reports.html")
+
+@login_required
+def recent(request):
+    return render(request, "recent.html")
+
+@login_required
+def activities(request):
+    return render(request, "activities.html")
