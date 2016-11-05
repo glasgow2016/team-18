@@ -6,7 +6,7 @@
 
 {% block content %}
         <div class="row">
-            <div class="col-md-12">
+            <div class="col-md-4 col-md-offset-4">
                 {% if showError %}
                 <h3>YOUR DEETS ARE WRONG</h3>
                 <h4>{{ message }}</h4>
@@ -26,6 +26,4 @@
 {% endblock %}
 
 {% block extra-js %}
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.15.2/moment.min.js"
-    integrity="sha256-lDcU9wi187tvmD2D2AvfRvhuVthZ5UxIP7Oh+Rk3yNw=" crossorigin="anonymous"></script>
 {% endblock %}
