@@ -8,13 +8,64 @@ def populate():
         super_user.save()
 
     lung_site = add_cancer_site("Lung")
+    breast_site = add_cancer_site("Breast")
+    lowergi_site = add_cancer_site("Lower GI")
+    uppergi_site = add_cancer_site("Upper GI")
+    braincns_site = add_cancer_site("Brain/CNS")
+    prostate_site = add_cancer_site("Prostate")
+    headneck_site = add_cancer_site("Head/Neck")
+    gynae_site = add_cancer_site("Gynae")
+    haemat_site = add_cancer_site("Haemat")
+    liver_site = add_cancer_site("Liver")
+    pancreatic_site = add_cancer_site("Pancreatic")
+    rare_site = add_cancer_site("Rare")
+    sarcoma_site = add_cancer_site("Sarcoma")
+    skinmel_site = add_cancer_site("Skin/Mel")
+    testicular_site = add_cancer_site("Testicular")
+    unknown_site = add_cancer_site("Unknown Primary")
+    urolog_site = add_cancer_site("Urolog")
+    notstated_site = add_cancer_site("Not Stated")
+
     booked_nature = add_visit_nature("Booked")
+    dropin_nature = add_visit_nature("Drop-In")
+    programme_nature = add_visit_nature("Programme")
+    telephonesupport_nature = add_visit_nature("Telephone Support")
+    emailsupport_nature = add_visit_nature("Email Support")
+    fundraising_nature = add_visit_nature("Fundraising")
+    outreach_nature = add_visit_nature("Outreach")
+
+
     prediagnosis_stage = add_journey_stage("Pre-Diagnosis")
+    curativeintent_stage = add_journey_stage("Curative Intent")
+    posttreatement_curativeintent_stage = add_journey_stage("Post Treatment - Curative Intent")
+    palliative_stage = add_journey_stage("Palliative Care")
+    endoflife_stage = add_journey_stage("End of Life")
+    bereaved_stage = add_journey_stage("Bereaved")
+    notstated_stage = add_journey_stage("Not Stated")
 
-    add_visitor(isNew=True, gender="M", natureOfVisit=booked_nature)
+    add_pwc(cancerSite=sarcoma_site, journeyStage=curativeintent_stage, isNew=True, gender="M", natureOfVisit=booked_nature)
 
-def add_visitor(isNew, gender, natureOfVisit):
-    p = Visitor.objects.get_or_create(is_new_visitor=isNew, gender=gender, nature_of_visit=natureOfVisit)[0]
+def add_pwc(cancerSite, journeyStage, isNew, gender, natureOfVisit):
+    p = PwC.objects.get_or_create(cancer_site=cancerSite,
+                                    journey_stage=journeyStage,
+                                    is_new_visitor=isNew,
+                                    gender=gender,
+                                    nature_of_visit=natureOfVisit)[0]
+    return p
+
+def add_carer(caringFor, relationship, isNew, gender, natureOfVisit):
+    p = Carer.objects.get_or_create(caring_for=caringFor,
+                                    relationship=relationship,
+                                    is_new_visitor=isNew,
+                                    gender=gender,
+                                    nature_of_visit=natureOfVisit)[0]
+    return p
+
+def add_othervisitor(description, isNew, gender, natureOfVisit):
+    p = OtherVisitor.objects.get_or_create(description=description,
+                                    is_new_visitor=isNew,
+                                    gender=gender,
+                                    nature_of_visit=natureOfVisit)[0]
     return p
 
 def add_cancer_site(name):
@@ -34,7 +85,7 @@ if __name__ == '__main__':
     os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'maggies.settings')
     from django.core.wsgi import get_wsgi_application
     application = get_wsgi_application()
-    from maggies.models import Visitor, CancerSite, VisitNature, JourneyStage
+    from maggies.models import Visitor, CancerSite, VisitNature, JourneyStage, PwC, Carer, OtherVisitor
     from django.contrib.auth.models import User
     from django.conf import settings
     populate()
