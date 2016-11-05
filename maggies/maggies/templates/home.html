@@ -24,7 +24,7 @@
               {% else %}
                   <div class="form-group">
                       <label class="col-sm-4 control-label" for="id_{{ field.name }}">{{ field.label }}</label>
-                      <div class="col-sm-8">
+                      <div class="col-sm-8 {% if field.label == 'First visit?' %}checkbox-style{% endif %}">
                           {{ field|attr:"class:form-control" }}
                           {% if field.help_text %}
                               <p class="help-block"><small>{{ field.help_text }}</small></p>
