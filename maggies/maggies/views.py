@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 from .forms import VisitorForm
 
 @login_required
@@ -34,3 +34,7 @@ def login_page(request):
             print("check failed")
     print("Falling back to basic page")
     return render(request, "login.html")
+
+def logout_page(request):
+    logout(request)
+    return redirect('/')
