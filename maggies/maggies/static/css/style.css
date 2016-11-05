@@ -6,8 +6,15 @@
   color: #eeeeee;
   padding: 15px;
   margin-bottom: 0px;
+  font-weight: bold;
 }
 
 #login_fail {
   color: #d44;
+}
+
+.checkbox-style > input {
+  width: 16px;
+  height: 16px;
+  margin-top: 8px;
 }
