@@ -55,7 +55,7 @@ class DailyIdentifier(models.Model):
     time_first_seen = models.DateTimeField()
     visitor = models.OneToOneField(Visitor)
 
-class Location(models.Model):
+class Centre(models.Model):
     name = models.CharField(max_length=256)
     address = models.CharField(max_length=256)
 
@@ -71,13 +71,17 @@ class StaffMember(models.Model):
     first_name = models.CharField(max_length=256)
     surname = models.CharField(max_length=256)
     role = models.ForeignKey(StaffRole, on_delete=models.PROTECT)
-    work_location = models.ManyToManyField(Location)
+    work_location = models.ManyToManyField(Centre)
     clearance_level = models.ForeignKey(ClearanceLevel)
     assisted = models.ManyToManyField(Visitor)
 
 class Activity(models.Model):
     name = models.CharField(max_length=256)
-    time = models.DateTimeField()
-    location = models.ManyToManyField(Location)
+    location = models.ManyToManyField(Centre)
     participants = models.ManyToManyField(Visitor)
     coordinators = models.ManyToManyField(StaffMember)
+
+class KnownVisitors(models.Model):
+    first_name = models.CharField(max_length=256)
+    phone_number = models.CharField(max_length=256)
+    notes = models.CharField(max_length=256)
