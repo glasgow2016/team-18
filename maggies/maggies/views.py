@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 
 @login_required
 def home(request):
@@ -24,5 +24,7 @@ def login_page(request):
     print("Falling back to basic page")
     return render(request, "login.html")
 
-def data_form(request):
-    return render(request, "data-form.html")
+
+def logout_page(request):
+    logout(request)
+    return redirect('/')
