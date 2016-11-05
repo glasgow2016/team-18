@@ -46,31 +46,36 @@ def populate():
     notstated_stage = add_journey_stage("Not Stated")
 
 
-    add_pwc(cancerInfo=add_cancer_info(sarcoma_site, curativeintent_stage), isNew=True, gender="M", natureOfVisit=booked_nature)
-    PwC.objects.get_or_create(sarcoma_site, curativeintent_stage, True, "M", booked_nature)
+    add_pwc(is_new_visitor=True, gender="M", nature_of_visit=booked_nature, cancer_info=add_cancer_info(sarcoma_site, curativeintent_stage))
 
-def add_pwc(cancerInfo, isNew, gender, natureOfVisit):
-    v = Visitor.objects.get_or_create(is_new_visitor=isNew,
+def add_pwc(is_new_visitor, gender, nature_of_visit, cancer_info):
+    v = Visitor.objects.get_or_create(is_new_visitor=is_new_visitor,
                                         gender=gender,
-                                        nature_of_visit=natureOfVisit)[0]
+                                        nature_of_visit=nature_of_visit)[0]
 
-    p = PwC.objects.get_or_create(cancer_info=cancerInfo,
-                                    visitor=v)[0]
+    p = PwC.objects.get_or_create(visitor=v,
+                                        cancer_info=cancer_info)[0]
     return p
 
-def add_carer(caringFor, relationship, isNew, gender, natureOfVisit):
-    p = Carer.objects.get_or_create(caring_for=caringFor,
-                                    relationship=relationship,
-                                    is_new_visitor=isNew,
-                                    gender=gender,
-                                    nature_of_visit=natureOfVisit)[0]
+def add_carer(is_new_visitor, gender, nature_of_visit, pwc_cancer_info, pwc_present, caring_for, relationship):
+    v = Visitor.objects.get_or_create(is_new_visitor=is_new_visitor,
+                                        gender=gender,
+                                        nature_of_visit=nature_of_visit)[0]
+
+    p = Carer.objects.get_or_create(visitor=v,
+                                        pwc_cancer_info=pwc_cancer_info,
+                                        pwc_present=pwc_present,
+                                        caring_for=caring_for,
+                                        relationship=relationship)[0]
     return p
 
-def add_othervisitor(description, isNew, gender, natureOfVisit):
-    p = OtherVisitor.objects.get_or_create(description=description,
-                                    is_new_visitor=isNew,
-                                    gender=gender,
-                                    nature_of_visit=natureOfVisit)[0]
+def add_othervisitor(description, is_new_visitor, gender, nature_of_visit):
+    v = Visitor.objects.get_or_create(is_new_visitor=is_new_visitor,
+                                        gender=gender,
+                                        nature_of_visit=nature_of_visit)[0]
+
+    p = OtherVisitor.objects.get_or_create(visitor=v,
+                                        description=description)[0]
     return p
 
 def add_cancer_info(cancerSite, journeyStage):
