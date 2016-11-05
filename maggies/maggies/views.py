@@ -35,6 +35,19 @@ def login_page(request):
     print("Falling back to basic page")
     return render(request, "login.html")
 
+@login_required
 def logout_page(request):
     logout(request)
     return redirect('/')
+
+@login_required
+def reports(request):
+    return render(request, "reports.html")
+
+@login_required
+def recent(request):
+    return render(request, "recent.html")
+
+@login_required
+def activities(request):
+    return render(request, "activities.html")
