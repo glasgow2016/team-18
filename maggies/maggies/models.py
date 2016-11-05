@@ -28,7 +28,7 @@ class PwC(Visitor):
     journey_stage = models.ForeignKey(JourneyStage)
 
 class Carer(Visitor):
-    caring_for = models.ForeignKey(PwC)
+    caring_for = models.ManyToManyField(PwC)
     relationship = models.CharField(max_length=256)
 
 class OtherVisitor(Visitor):
