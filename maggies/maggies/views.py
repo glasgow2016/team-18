@@ -40,24 +40,26 @@ def home(request):
                                 journey_stage = form_journey_stage)
 
                 pwc = PwC.objects.create(
-                        cancer_info = cancer_info)[0]
+                                cancer_info = cancer_info,
+                                visitor=visitor)[0]
 
             elif form_visitor_type == CARER:
                 #create visitor object
                 pwc_cancer_info = CancerInfo.objects.create(
-                                    cancer_site = form_cancer_site,
-                                    journey_stage = form_journey_stage)
+                                cancer_site = form_cancer_site,
+                                journey_stage = form_journey_stage)
 
                 #TODO get pwc_present when appropriate
                 carer = Carer.objects.create(
-                        pwc_cancer_info = pwc_cancer_info,
-                        pwc_present = False,
-                        relationship = "FILL ME",
-                        visitor_ptr = visitor)
+                                pwc_cancer_info = pwc_cancer_info,
+                                pwc_present = False,
+                                relationship = "FILL ME",
+                                visitor = visitor)
 
             elif form_visitor_type == OTHER:
                 other = OtherVisitor.objects.create(
-                        description = "FILL ME")
+                                description = "FILL ME",
+                                visitor = visitor)
 
 
             return render(request, "home.html")
