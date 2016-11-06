@@ -1,8 +1,8 @@
 #!/bin/bash
 clear
-echo "Installing requirements"
-pip install -r requirements.txt
-rm -r -f db.sqlite3
+#echo "Installing requirements"
+#pip install -r requirements.txt
+rm db.sqlite3
 
 echo ""
 echo "Migrating db"

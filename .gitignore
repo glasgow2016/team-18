@@ -90,3 +90,5 @@ ENV/
 .ropeproject
 
 *.sqlite3
+
+*.lock

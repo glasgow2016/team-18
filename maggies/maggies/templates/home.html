@@ -40,8 +40,51 @@
           </div>
       </form>
     </div>
+    <div class="col-md-3">
+        <h3 id="list-of-hits-title" class="hidden">Suggested Visitors Today</h3>
+        <ul id="list-of-hits" class="list-group">
+        </ul>
+    </div>
 </div>
 {% endblock %}
 
 {% block extra-js %}
+<script>
+    $("#id_visitor_name").keyup(function(eventObject) {
+        console.log($(this).val());
+        $("#list-of-hits").empty();
+
+        $.ajax({
+          url: "/ajax_check_for_daily_ids",
+          method: "POST",
+          data: { visitor_name: $(this).val() },
+          cache: false
+        })
+          .done(function(response) {
+              if ($("#list-of-hits-title").hasClass("hidden")) {
+                  $("#list-of-hits-title").removeClass("hidden");
+              }
+              console.log(response);
+              console.log(response.success);
+              if (response.success) {
+                  console.log("IM HERE");
+                  var items = response.items;
+                  console.log(items.length);
+                  for (var i=0; i < items.length; i++) {
+                      var date = new Date(items[i].time_first_seen);
+                      var html = "<a href='#' class='list-group-item'><h2>";
+                      html += items[i].first_name;
+                      html += "</h2><p>";
+
+                      html += date.toTimeString().replace(/.*(\d{2}:\d{2}).*/, "$1");
+                      html += "</p></a>";
+                      $("#list-of-hits").append(html);
+                  }
+              }
+              /*for (var item : response) {
+                  list-of-hits.append("<li>hi</li>")
+              }*/
+          });
+    });
+</script>
 {% endblock %}

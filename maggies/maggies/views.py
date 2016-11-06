@@ -1,8 +1,11 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
-from .forms import VisitorForm, PWC, CARER, OTHER
-from .models import PwC, Carer, OtherVisitor, CancerInfo, Visitor
+from django.http import JsonResponse
+from .forms import VisitorForm, PWC, CARER, OTHER, ReportsForm, DAY, WEEK, MONTH
+from .models import PwC, Carer, OtherVisitor, CancerInfo, Visitor, DailyIdentifier
+
+from datetime import datetime
 
 
 @login_required
@@ -32,6 +35,10 @@ def home(request):
                         is_new_visitor = form_is_new_visitor,
                         gender = form_visitor_gender,
                         nature_of_visit = form_nature_of_visit)
+
+            dailyIdentifier = DailyIdentifier.objects.get_or_create(first_name = form_visitor_name,
+                                                                    time_first_seen = datetime.now(),
+                                                                    visitor = visitor)
 
             if form_visitor_type == PWC:
                 #create PWC object
@@ -69,6 +76,16 @@ def home(request):
     form = VisitorForm()
     return render(request, "home.html", {"form": form})
 
+def ajax_check_for_daily_ids(request):
+    if request.method == "POST":
+        if "visitor_name" in request.POST:
+            matching_ids = DailyIdentifier.objects.filter(first_name__icontains = request.POST["visitor_name"])
+            print("Found " + str(len(matching_ids)) + " matching ids")
+            print( matching_ids)
+            dictionaries = [ obj.as_dict() for obj in matching_ids ]
+            return JsonResponse({"success": True, "items": dictionaries})
+    return JsonResponse({"success": False})
+
 
 def login_page(request):
     if request.method == "POST":
@@ -95,7 +112,17 @@ def logout_page(request):
 
 @login_required
 def reports(request):
-    return render(request, "reports.html")
+    if request.method=="POST":
+        form = ReportsForm(request.POST)
+        if form.is_valid():
+            print("Form is valid.")
+            form_report_type = form.cleaned_data["report_timeframe"]
+
+
+
+    form = ReportsForm()
+
+    return render(request, "reports.html", {"form": form})
 
 @login_required
 def recent(request):

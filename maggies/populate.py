@@ -65,6 +65,19 @@ def populate():
     random_pwcs(10, centres, news, genders, natures, sites, stages)
 
 
+    bob_pwc = add_pwc(visit_location=glasgow_centre, is_new_visitor=True, gender="M", nature_of_visit=booked_nature, cancer_info=add_cancer_info(sarcoma_site, curativeintent_stage))
+
+    add_daily_identifier("Bob", datetime.now(), visitor=bob_pwc.visitor)
+
+    elizabeth_pwc = add_pwc(visit_location=glasgow_centre, is_new_visitor=True, gender="F", nature_of_visit=booked_nature, cancer_info=add_cancer_info(testicular_site, endoflife_stage))
+
+    add_daily_identifier("Elizabeth", datetime.now(), visitor=elizabeth_pwc.visitor)
+
+    billy_pwc = add_pwc(visit_location=glasgow_centre, is_new_visitor=True, gender="M", nature_of_visit=booked_nature, cancer_info=add_cancer_info(sarcoma_site, curativeintent_stage))
+
+    add_daily_identifier("Billy", datetime.now(), visitor=billy_pwc.visitor)
+
+
 def random_pwcs(n, centres, news, genders, natures, sites, stages):
     for i in range(0,n):
         rCentre = choice(centres)
@@ -75,6 +88,11 @@ def random_pwcs(n, centres, news, genders, natures, sites, stages):
         rStage = choice(stages)
         add_pwc(visit_location=rCentre, is_new_visitor=rNew, gender=rGender, nature_of_visit=rNature, cancer_info=add_cancer_info(rSite, rStage))
 
+def add_daily_identifier(first_name, time_first_seen, visitor):
+    d = DailyIdentifier.objects.get_or_create(first_name=first_name,
+                                            time_first_seen=time_first_seen,
+                                            visitor=visitor)
+    return d
 
 def add_pwc(visit_location, is_new_visitor, gender, nature_of_visit, cancer_info):
     v = Visitor.objects.get_or_create(visit_date_time=datetime.now(),
@@ -150,7 +168,7 @@ if __name__ == '__main__':
     os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'maggies.settings')
     from django.core.wsgi import get_wsgi_application
     application = get_wsgi_application()
-    from maggies.models import Visitor, CancerSite, VisitNature, JourneyStage, PwC, Carer, OtherVisitor, CancerInfo, Centre
+    from maggies.models import Visitor, CancerSite, VisitNature, JourneyStage, PwC, Carer, OtherVisitor, CancerInfo, Centre, DailyIdentifier
     from django.contrib.auth.models import User
     from django.conf import settings
     populate()
