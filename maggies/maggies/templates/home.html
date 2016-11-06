@@ -199,8 +199,15 @@
 
                         var obj = response.obj;
                         var visitor_name = $this.attr("data-name");
-                        var cancer_site = obj.cancer_info.cancer_site;
-                        var journey_stage = obj.cancer_info.journey_stage;
+                        var cancer_site;
+                        var journey_stage;
+                        if (type === "PwC") {
+                            cancer_site = obj.cancer_info.cancer_site;
+                            journey_stage = obj.cancer_info.journey_stage;
+                        } else if (type === "Carer") {
+                            cancer_site = obj.pwc_cancer_info.cancer_site;
+                            journey_stage = obj.pwc_cancer_info.journey_stage;
+                        }
                         var gender = obj.visitor.gender;
                         var is_new_visitor = obj.visitor.is_new_visitor;
                         var nature_of_visit = obj.visitor.nature_of_visit;
