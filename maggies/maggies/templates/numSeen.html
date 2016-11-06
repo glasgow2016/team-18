@@ -50,21 +50,12 @@
           var visitCount = response.leDates;
           var arrayOfDates = [];
           var arrayOfCounts = [];
-          var bgcolors = [
-            'rgba(54, 162, 235, 0.2)',
-            'rgba(120, 54, 235, 0.3)'
-          ]
-          var borderColor = [
-              'rgba(54, 162, 235, 1)'
-          ]
           bgcArray = []
           brdcArray = []
           for (var x in visitCount) {
             console.log(visitCount[x].count);
             arrayOfDates.push(visitCount[x].date);
             arrayOfCounts.push(visitCount[x].count);
-            bgcArray.push(bgcolors[(x%2)])
-            brdcArray.push(borderColor[x])
           }
 
           console.log(arrayOfDates);
@@ -76,10 +67,10 @@
               data: {
                   labels: arrayOfDates,
                   datasets: [{
-                      label: "hi",
+                      label: "Number of People seen v Dates",
                       data: arrayOfCounts,
-                      backgroundColor: bgcArray,
-                      borderColor: brdcArray,
+                      backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                      borderColor: 'rgba(54, 162, 235, 1)',
                       borderWidth: 1
                   }]
 
