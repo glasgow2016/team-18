@@ -46,11 +46,14 @@ def populate():
     bereaved_stage = add_journey_stage("Bereaved")
     notstated_stage = add_journey_stage("Not Stated")
 
+    # Centre values
+    glasgow_centre = add_centre("Glasgow", "10 Dumbarton Road, Glasgow G11 6PA")
 
-    add_pwc(is_new_visitor=True, gender="M", nature_of_visit=booked_nature, cancer_info=add_cancer_info(sarcoma_site, curativeintent_stage))
+    add_pwc(visit_location=glasgow_centre, is_new_visitor=True, gender="M", nature_of_visit=booked_nature, cancer_info=add_cancer_info(sarcoma_site, curativeintent_stage))
 
-def add_pwc(is_new_visitor, gender, nature_of_visit, cancer_info):
+def add_pwc(visit_location, is_new_visitor, gender, nature_of_visit, cancer_info):
     v = Visitor.objects.get_or_create(visit_date_time=datetime.now(),
+                                        visit_location=visit_location,
                                         is_new_visitor=is_new_visitor,
                                         gender=gender,
                                         nature_of_visit=nature_of_visit)[0]
@@ -59,8 +62,9 @@ def add_pwc(is_new_visitor, gender, nature_of_visit, cancer_info):
                                         cancer_info=cancer_info)[0]
     return p
 
-def add_carer(is_new_visitor, gender, nature_of_visit, pwc_cancer_info, pwc_present, caring_for, relationship):
+def add_carer(visit_location, is_new_visitor, gender, nature_of_visit, pwc_cancer_info, pwc_present, caring_for, relationship):
     v = Visitor.objects.get_or_create(visit_date_time=datetime.now(),
+                                        visit_location=visit_location,
                                         is_new_visitor=is_new_visitor,
                                         gender=gender,
                                         nature_of_visit=nature_of_visit)[0]
@@ -72,8 +76,9 @@ def add_carer(is_new_visitor, gender, nature_of_visit, pwc_cancer_info, pwc_pres
                                         relationship=relationship)[0]
     return p
 
-def add_othervisitor(description, is_new_visitor, gender, nature_of_visit):
+def add_othervisitor(visit_location, description, is_new_visitor, gender, nature_of_visit):
     v = Visitor.objects.get_or_create(visit_date_time=datetime.now(),
+                                        visit_location=visit_location,
                                         is_new_visitor=is_new_visitor,
                                         gender=gender,
                                         nature_of_visit=nature_of_visit)[0]
@@ -101,13 +106,18 @@ def add_journey_stage(stage):
 
 def add_staff_member(user, first_name, surname, role, work_location, clearance_level, assisted):
     p = StaffMember.objects.get_or_create(user=user,
-                                    first_name=first_name,
-                                    surname=surname,
-                                    role=role,
-                                    work_location=work_location,
-                                    clearance_level=clearance_level,
-                                    assisted=assisted)[0]
+                                        first_name=first_name,
+                                        surname=surname,
+                                        role=role,
+                                        work_location=work_location,
+                                        clearance_level=clearance_level,
+                                        assisted=assisted)[0]
     return p
+
+def add_centre(name, address):
+    c = Centre.objects.get_or_create(name=name,
+                                        address=address)[0]
+    return c
 
 
 if __name__ == '__main__':
@@ -115,7 +125,7 @@ if __name__ == '__main__':
     os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'maggies.settings')
     from django.core.wsgi import get_wsgi_application
     application = get_wsgi_application()
-    from maggies.models import Visitor, CancerSite, VisitNature, JourneyStage, PwC, Carer, OtherVisitor, CancerInfo
+    from maggies.models import Visitor, CancerSite, VisitNature, JourneyStage, PwC, Carer, OtherVisitor, CancerInfo, Centre
     from django.contrib.auth.models import User
     from django.conf import settings
     populate()

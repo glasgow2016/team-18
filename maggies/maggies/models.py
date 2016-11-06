@@ -28,9 +28,14 @@ class JourneyStage(models.Model):
     def __str__(self):
         return self.stage
 
+class Centre(models.Model):
+    name = models.CharField(max_length=256)
+    address = models.CharField(max_length=256)
+
 # NOTE & TODO: Make the naive datetime aware of its timezone
 class Visitor(models.Model):
     visit_date_time = models.DateTimeField()
+    visit_location = models.ForeignKey(Centre)
     is_new_visitor = models.BooleanField()
     gender = models.CharField(max_length=1, choices=GENDER_CHOICES)
     nature_of_visit = models.ForeignKey(VisitNature)
@@ -59,10 +64,6 @@ class DailyIdentifier(models.Model):
     first_name = models.CharField(max_length=256)
     time_first_seen = models.DateTimeField()
     visitor = models.OneToOneField(Visitor)
-
-class Centre(models.Model):
-    name = models.CharField(max_length=256)
-    address = models.CharField(max_length=256)
 
 class StaffRole(models.Model):
     description = models.CharField(max_length=256)
