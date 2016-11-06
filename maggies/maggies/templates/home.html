@@ -156,7 +156,7 @@
                       html += "'><h2>";
                       html += items[i].first_name;
                       html += "</h2><p>Seen Today @ <b>";
-                      html += date.toTimeString().replace(/.*(\d{2}:\d{2}).*/, "$1");
+                      html += date.getHours() + ":" + date.getMinutes();
                       html += "</b></p>";
                       html += "<p>Type: <b>";
                       html += items[i].subclass_info.visitor.visitor_type;
