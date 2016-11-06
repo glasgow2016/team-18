@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
-from .forms import VisitorForm, PWC, CARER, OTHER, ReportsForm, DAY, WEEK, MONTH
+from .forms import VisitorForm, PWC, CARER, OTHER
 from .models import PwC, Carer, OtherVisitor, CancerInfo, Visitor
 
 
@@ -95,17 +95,7 @@ def logout_page(request):
 
 @login_required
 def reports(request):
-    if request.method=="POST":
-        form = ReportsForm(request.POST)
-        if form.is_valid():
-            print("Form is valid.")
-            form_report_type = form.cleaned_data["report_timeframe"]
-
-
-
-    form = ReportsForm()
-
-    return render(request, "reports.html", {"form": form})
+    return render(request, "reports.html")
 
 @login_required
 def recent(request):
@@ -114,3 +104,9 @@ def recent(request):
 @login_required
 def activities(request):
     return render(request, "activities.html")
+
+@login_required
+def get_report_visitor_count(request):
+    if request.method == "POST":
+        print(request)
+    return
