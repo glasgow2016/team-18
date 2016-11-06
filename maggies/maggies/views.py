@@ -1,17 +1,11 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
-<<<<<<< HEAD
 from .forms import VisitorForm, PWC, CARER, OTHER
-from .models import PwC, Carer, OtherVisitor, CancerInfo, Visitor
-=======
-from django.http import JsonResponse
-from .forms import VisitorForm, PWC, CARER, OTHER, ReportsForm, DAY, WEEK, MONTH
 from .models import PwC, Carer, OtherVisitor, CancerInfo, Visitor, DailyIdentifier
+from django.http import JsonResponse
 
 from datetime import datetime
->>>>>>> 4f2d19271f80d7da1f7113d5133f2db1974d51bc
-
 
 @login_required
 def home(request):
