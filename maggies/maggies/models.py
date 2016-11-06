@@ -28,8 +28,9 @@ class JourneyStage(models.Model):
     def __str__(self):
         return self.stage
 
+# NOTE & TODO: Make the naive datetime aware of its timezone
 class Visitor(models.Model):
-    visit_date = models.DateField()
+    visit_date_time = models.DateTimeField()
     is_new_visitor = models.BooleanField()
     gender = models.CharField(max_length=1, choices=GENDER_CHOICES)
     nature_of_visit = models.ForeignKey(VisitNature)
