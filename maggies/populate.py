@@ -1,4 +1,5 @@
 import os
+from datetime import datetime
 
 def populate():
     if not User.objects.filter(username="test").exists():
@@ -49,7 +50,8 @@ def populate():
     add_pwc(is_new_visitor=True, gender="M", nature_of_visit=booked_nature, cancer_info=add_cancer_info(sarcoma_site, curativeintent_stage))
 
 def add_pwc(is_new_visitor, gender, nature_of_visit, cancer_info):
-    v = Visitor.objects.get_or_create(is_new_visitor=is_new_visitor,
+    v = Visitor.objects.get_or_create(visit_date=datetime.now(),
+                                        is_new_visitor=is_new_visitor,
                                         gender=gender,
                                         nature_of_visit=nature_of_visit)[0]
 
@@ -58,7 +60,8 @@ def add_pwc(is_new_visitor, gender, nature_of_visit, cancer_info):
     return p
 
 def add_carer(is_new_visitor, gender, nature_of_visit, pwc_cancer_info, pwc_present, caring_for, relationship):
-    v = Visitor.objects.get_or_create(is_new_visitor=is_new_visitor,
+    v = Visitor.objects.get_or_create(visit_date=datetime.now(),
+                                        is_new_visitor=is_new_visitor,
                                         gender=gender,
                                         nature_of_visit=nature_of_visit)[0]
 
@@ -70,7 +73,8 @@ def add_carer(is_new_visitor, gender, nature_of_visit, pwc_cancer_info, pwc_pres
     return p
 
 def add_othervisitor(description, is_new_visitor, gender, nature_of_visit):
-    v = Visitor.objects.get_or_create(is_new_visitor=is_new_visitor,
+    v = Visitor.objects.get_or_create(visit_date=datetime.now(),
+                                        is_new_visitor=is_new_visitor,
                                         gender=gender,
                                         nature_of_visit=nature_of_visit)[0]
 
