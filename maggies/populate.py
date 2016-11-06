@@ -2,6 +2,7 @@ import os
 from datetime import datetime, timedelta
 from random import choice, randrange
 import pytz
+from django.db import transaction
 
 def populate():
     if not User.objects.filter(username="test").exists():
@@ -82,6 +83,7 @@ def populate():
     add_daily_identifier("Billy", aware_now_time(), visitor=billy_pwc.visitor)
 
 
+@transaction.atomic
 def random_pwcs(n, centres, news, genders, natures, sites, stages):
     for i in range(n):
         rTime = aware_now_time() - timedelta(days=-randrange(n))
