@@ -1,6 +1,7 @@
 import os
 from datetime import datetime, timedelta
-from random import choice
+from random import choice, randrange
+import pytz
 
 def populate():
     if not User.objects.filter(username="test").exists():
@@ -8,14 +9,6 @@ def populate():
         super_user.is_superuser = True
         super_user.is_staff = True
         super_user.save()
-
-    # Some datetimes
-    now_datetime = datetime.now()
-    yesterday_datetime = now_datetime - timedelta(days=-3)
-    last_week_datetime = now_datetime - timedelta(days=-7)
-    last_month_datetime = now_datetime - timedelta(days=-30)
-    half_a_year_ago_datetime = now_datetime - timedelta(days=-364/2)
-    one_year_ago_datetime = now_datetime - timedelta(days=-365)
 
     # Cancer Site values
     lung_site = add_cancer_site("Lung")
@@ -59,7 +52,6 @@ def populate():
     glasgow_centre = add_centre("Glasgow", "10 Dumbarton Road, Glasgow G11 6PA")
     london_centre = add_centre("London", "3, Thames Wharf, Rainville Rd, London W6 9HA")
 
-    datetimes = [now_datetime, yesterday_datetime, last_week_datetime, last_month_datetime, half_a_year_ago_datetime, one_year_ago_datetime]
     centres = [glasgow_centre, london_centre]
     news = [0,1]
     genders = ["M", "F"]
@@ -71,32 +63,32 @@ def populate():
     stages = [prediagnosis_stage, curativeintent_stage, posttreatement_curativeintent_stage, palliative_stage,
                 endoflife_stage, bereaved_stage, notstated_stage]
 
-    #add_pwc(visit_location=glasgow_centre, is_new_visitor=True, gender="M", nature_of_visit=booked_nature, cancer_info=add_cancer_info(sarcoma_site, curativeintent_stage))
-    random_pwcs(10, datetimes, centres, news, genders, natures, sites, stages)
+    random_pwcs(400, centres, news, genders, natures, sites, stages)
 
 
-    bob_pwc = add_pwc(visit_location=glasgow_centre, is_new_visitor=True, gender="M", nature_of_visit=booked_nature, cancer_info=add_cancer_info(sarcoma_site, curativeintent_stage))
+    bob_pwc = add_pwc(visit_date_time=aware_now_time(), visit_location=glasgow_centre, is_new_visitor=True, gender="M", nature_of_visit=booked_nature, cancer_info=add_cancer_info(sarcoma_site, curativeintent_stage))
 
-    add_daily_identifier("Bob", datetime.now(), visitor=bob_pwc.visitor)
+    add_daily_identifier("Bob", aware_now_time(), visitor=bob_pwc.visitor)
 
-    elizabeth_pwc = add_pwc(visit_location=glasgow_centre, is_new_visitor=True, gender="F", nature_of_visit=booked_nature, cancer_info=add_cancer_info(testicular_site, endoflife_stage))
+    elizabeth_pwc = add_pwc(visit_date_time=aware_now_time(), visit_location=glasgow_centre, is_new_visitor=True, gender="F", nature_of_visit=booked_nature, cancer_info=add_cancer_info(testicular_site, endoflife_stage))
 
-    add_daily_identifier("Elizabeth", datetime.now(), visitor=elizabeth_pwc.visitor)
+    add_daily_identifier("Elizabeth", aware_now_time(), visitor=elizabeth_pwc.visitor)
 
-    billy_pwc = add_pwc(visit_location=glasgow_centre, is_new_visitor=True, gender="M", nature_of_visit=booked_nature, cancer_info=add_cancer_info(sarcoma_site, curativeintent_stage))
+    billy_pwc = add_pwc(visit_date_time=aware_now_time(), visit_location=glasgow_centre, is_new_visitor=True, gender="M", nature_of_visit=booked_nature, cancer_info=add_cancer_info(sarcoma_site, curativeintent_stage))
 
-    add_daily_identifier("Billy", datetime.now(), visitor=billy_pwc.visitor)
+    add_daily_identifier("Billy", aware_now_time(), visitor=billy_pwc.visitor)
 
 
-def random_pwcs(n, datetimes, centres, news, genders, natures, sites, stages):
-    for i in range(0,n):
+def random_pwcs(n, centres, news, genders, natures, sites, stages):
+    for i in range(n):
+        rTime = aware_now_time() - timedelta(days=-randrange(n))
         rCentre = choice(centres)
         rNew = choice(news)
         rGender = choice(genders)
         rNature = choice(natures)
         rSite = choice(sites)
         rStage = choice(stages)
-        add_pwc(visit_location=rCentre, is_new_visitor=rNew, gender=rGender, nature_of_visit=rNature, cancer_info=add_cancer_info(rSite, rStage))
+        add_pwc(visit_date_time=rTime,visit_location=rCentre, is_new_visitor=rNew, gender=rGender, nature_of_visit=rNature, cancer_info=add_cancer_info(rSite, rStage))
 
 def add_daily_identifier(first_name, time_first_seen, visitor):
     d = DailyIdentifier.objects.get_or_create(first_name=first_name,
@@ -104,8 +96,8 @@ def add_daily_identifier(first_name, time_first_seen, visitor):
                                             visitor=visitor)
     return d
 
-def add_pwc(visit_location, is_new_visitor, gender, nature_of_visit, cancer_info):
-    v = Visitor.objects.get_or_create(visit_date_time=datetime.now(),
+def add_pwc(visit_date_time, visit_location, is_new_visitor, gender, nature_of_visit, cancer_info):
+    v = Visitor.objects.get_or_create(visit_date_time=visit_date_time,
                                         visit_location=visit_location,
                                         is_new_visitor=is_new_visitor,
                                         gender=gender,
@@ -115,8 +107,8 @@ def add_pwc(visit_location, is_new_visitor, gender, nature_of_visit, cancer_info
                                         cancer_info=cancer_info)[0]
     return p
 
-def add_carer(visit_location, is_new_visitor, gender, nature_of_visit, pwc_cancer_info, pwc_present, caring_for, relationship):
-    v = Visitor.objects.get_or_create(visit_date_time=datetime.now(),
+def add_carer(visit_date_time, visit_location, is_new_visitor, gender, nature_of_visit, pwc_cancer_info, pwc_present, caring_for, relationship):
+    v = Visitor.objects.get_or_create(visit_date_time=visit_date_time,
                                         visit_location=visit_location,
                                         is_new_visitor=is_new_visitor,
                                         gender=gender,
@@ -129,8 +121,8 @@ def add_carer(visit_location, is_new_visitor, gender, nature_of_visit, pwc_cance
                                         relationship=relationship)[0]
     return p
 
-def add_othervisitor(visit_location, description, is_new_visitor, gender, nature_of_visit):
-    v = Visitor.objects.get_or_create(visit_date_time=datetime.now(),
+def add_othervisitor(visit_date_time, visit_location, description, is_new_visitor, gender, nature_of_visit):
+    v = Visitor.objects.get_or_create(visit_date_time=visit_date_time,
                                         visit_location=visit_location,
                                         is_new_visitor=is_new_visitor,
                                         gender=gender,
@@ -172,6 +164,8 @@ def add_centre(name, address):
                                         address=address)[0]
     return c
 
+def aware_now_time():
+    return pytz.utc.localize(datetime.now())
 
 if __name__ == '__main__':
     print("Starting population script...")
