@@ -12,9 +12,11 @@ from datetime import datetime
 def home(request):
     ActivityFormSet = formset_factory(ActivityForm)
     if request.method=="POST":
+        # We've been sent a form, lets extract the information
         form = VisitorForm(request.POST)
         activity_formset = ActivityFormSet(request.POST)
         if form.is_valid() and activity_formset.is_valid():
+            # Check all forms have been correctly filled out
             print("Form is valid.")
             form_has_been_seen_today = form.cleaned_data["has_been_seen_today"]
             form_dailyid_id = form.cleaned_data["dailyid_id"]
@@ -32,6 +34,7 @@ def home(request):
                     activity.save()
                     print("ADDED PARTICIPANT")
             else:
+                # New visitor
                 form_visitor_name = form.cleaned_data["visitor_name"]
                 form_visitor_type = form.cleaned_data["visitor_type"]
                 form_is_new_visitor = form.cleaned_data["is_new_visitor"]
@@ -49,6 +52,7 @@ def home(request):
                         form_cancer_site,
                         form_journey_stage)
 
+                # Hardcode a default location, since profiles don't store it yet
                 glasgow_loc = Centre.objects.filter(name__icontains="Glasgow")[0]
 
                 visitor = Visitor.objects.create(
@@ -62,6 +66,7 @@ def home(request):
                                                                         time_first_seen = datetime.now(),
                                                                         visitor = visitor)
 
+                # Add all activity info
                 for activity_form in activity_formset:
                     if "activity_name" not in activity_form.cleaned_data:
                         continue
@@ -82,7 +87,7 @@ def home(request):
                                     visitor=visitor)
 
                 elif form_visitor_type == CARER:
-                    #create visitor object
+                    #create carer object
                     pwc_cancer_info = CancerInfo.objects.create(
                                     cancer_site = form_cancer_site,
                                     journey_stage = form_journey_stage)
@@ -95,6 +100,7 @@ def home(request):
                                     visitor = visitor)
 
                 elif form_visitor_type == OTHER:
+                    # Info not available to be added in form yet
                     other = OtherVisitor.objects.create(
                                     description = "FILL ME",
                                     visitor = visitor)
@@ -113,6 +119,7 @@ def home(request):
     return render(request, "home.html", {"form": form, "activityFormSet": activityFormSet})
 
 def ajax_check_for_daily_ids(request):
+    # Returns a list of DailyIdentifiers that match the visitor name entered so far
     if request.method == "POST":
         if "visitor_name" in request.POST:
             matching_ids = DailyIdentifier.objects.filter(first_name__icontains = request.POST["visitor_name"])
@@ -124,6 +131,7 @@ def ajax_check_for_daily_ids(request):
 
 
 def ajax_get_autofill_details(request):
+    # Given a specific DailyIdentifier, returns all the important info about it for autofilling
     if request.method == "POST":
         if "dailyid_id" in request.POST:
             dailyid_id = request.POST["dailyid_id"]
@@ -135,6 +143,7 @@ def ajax_get_autofill_details(request):
             responseObj = {"success":True,
                 "obj": visitor_child_instance.as_dict(), "activities":  dictionaries}
 
+            # Identify the specific subclass type
             if isinstance(visitor_child_instance, PwC):
                 responseObj["type"] = "PwC"
             elif isinstance(visitor_child_instance, Carer):
