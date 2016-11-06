@@ -11,7 +11,47 @@
 
         <div class="row">
             <div class="col-md-12">
-              <h2>RECENT BE HERE</h2>
+              <h2>Recently Added Visitors</h2>
+              <table class="table table-striped">
+                <thead>
+                  <tr>
+                    <th>Location</th>
+                    <th>Visitor Type</th>
+                    <th>Is New Visitor</th>
+                    <th>Gender</th>
+                    <th>Cancer Site</th>
+                    <th>Journey Stage</th>
+                    <th>Nature Of Visit</th>
+                    <th>Activities</th>
+                    <th>Date</th>
+                  </tr>
+                </thead>
+                <tbody>
+                    {% for visit in recent_visitors %}
+                      <tr>
+                        <td>{{ visit.visit_location.name }}</td>
+                        <td>{{ visit.get_type }}</td>
+                        <td>{{ visit.is_new_visitor }}</td>
+                        <td>{{ visit.gender }}</td>
+
+                        {% if visit.get_type == "PwC" %}
+                        <td>{{ visit.pwc.cancer_info.cancer_site }}</td>
+                        <td>{{ visit.pwc.cancer_info.journey_stage }}</td>
+                        {% elif visit.pwc_cancer_info %}
+                        <td>{{ visit.carer.pwc_cancer_info.cancer_site }}</td>
+                        <td>{{ visit.carer.pwc_cancer_info.journey_stage }}</td>
+                        {% else %}
+                        <td></td>
+                        <td></td>
+                        {% endif %}
+
+                        <td>{{ visit.nature_of_visit.nature }}</td>
+                        <td>{% for activity in visit.activity_set.all %}{{activity.name}}, {% endfor %}</td>
+                        <td>{{ visit.visit_date_time.date }}</td>
+                      </tr>
+                    {% endfor %}
+                </tbody>
+              </table>
             </div>
         </div>
     </div> <!-- /container -->

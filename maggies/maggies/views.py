@@ -3,7 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
 from django.forms.formsets import formset_factory
 from .forms import VisitorForm, PWC, CARER, OTHER, ActivityForm
-from .models import PwC, Carer, OtherVisitor, CancerInfo, Visitor, DailyIdentifier, Activity
+from .models import PwC, Carer, OtherVisitor, CancerInfo, Visitor, DailyIdentifier, Activity, findChildFromVisitor, Centre
 from django.http import JsonResponse
 
 from datetime import datetime
@@ -24,9 +24,13 @@ def home(request):
                 dailyID = DailyIdentifier.objects.get(pk=form_dailyid_id)
                 visitor = dailyID.visitor
                 for activity_form in activity_formset:
+                    if "activity_name" not in activity_form.cleaned_data:
+                        continue
                     form_activity_name = activity_form.cleaned_data["activity_name"]
                     activity = Activity.objects.get_or_create(name=form_activity_name)[0]
                     activity.participants.add(visitor)
+                    activity.save()
+                    print("ADDED PARTICIPANT")
             else:
                 form_visitor_name = form.cleaned_data["visitor_name"]
                 form_visitor_type = form.cleaned_data["visitor_type"]
@@ -45,8 +49,11 @@ def home(request):
                         form_cancer_site,
                         form_journey_stage)
 
+                glasgow_loc = Centre.objects.filter(name__icontains="Glasgow")[0]
+
                 visitor = Visitor.objects.create(
                             visit_date_time = datetime.now(),
+                            visit_location = glasgow_loc,
                             is_new_visitor = form_is_new_visitor,
                             gender = form_visitor_gender,
                             nature_of_visit = form_nature_of_visit)
@@ -54,6 +61,15 @@ def home(request):
                 dailyIdentifier = DailyIdentifier.objects.get_or_create(first_name = form_visitor_name,
                                                                         time_first_seen = datetime.now(),
                                                                         visitor = visitor)
+
+                for activity_form in activity_formset:
+                    if "activity_name" not in activity_form.cleaned_data:
+                        continue
+                    form_activity_name = activity_form.cleaned_data["activity_name"]
+                    activity = Activity.objects.get_or_create(name=form_activity_name)[0]
+                    activity.participants.add(visitor)
+                    activity.save()
+                    print("ADDED PARTICIPANT")
 
                 if form_visitor_type == PWC:
                     #create PWC object
@@ -63,7 +79,7 @@ def home(request):
 
                     pwc = PwC.objects.create(
                                     cancer_info = cancer_info,
-                                    visitor=visitor)[0]
+                                    visitor=visitor)
 
                 elif form_visitor_type == CARER:
                     #create visitor object
@@ -101,22 +117,10 @@ def ajax_check_for_daily_ids(request):
         if "visitor_name" in request.POST:
             matching_ids = DailyIdentifier.objects.filter(first_name__icontains = request.POST["visitor_name"])
             print("Found " + str(len(matching_ids)) + " matching ids")
-            print( matching_ids)
+            print(matching_ids)
             dictionaries = [ obj.as_dict() for obj in matching_ids ]
             return JsonResponse({"success": True, "items": dictionaries})
     return JsonResponse({"success": False})
-
-def findChildFromVisitor(visitor):
-    matching_pwc = PwC.objects.filter(visitor=visitor)
-    if len(matching_pwc) > 0:
-        return matching_pwc[0]
-    matching_carer = Carer.objects.filter(visitor=visitor)
-    if len(matching_carer) > 0:
-        return matching_carer[0]
-    matching_other = OtherVisitor.objects.filter(visitor=visitor)
-    if len(matching_other) > 0:
-        return matching_other[0]
-    return None
 
 
 def ajax_get_autofill_details(request):
@@ -126,15 +130,19 @@ def ajax_get_autofill_details(request):
             dailyid_obj = DailyIdentifier.objects.filter(pk=dailyid_id)[0]
             visitor = dailyid_obj.visitor
             visitor_child_instance = findChildFromVisitor(visitor)
+            activities = visitor.activity_set.all()
+            dictionaries = [ obj.as_dict() for obj in activities ]
+            responseObj = {"success":True,
+                "obj": visitor_child_instance.as_dict(), "activities":  dictionaries}
+
             if isinstance(visitor_child_instance, PwC):
-                return JsonResponse({"success":True, "type": "PwC",
-                    "obj": visitor_child_instance.as_dict()})
+                responseObj["type"] = "PwC"
             elif isinstance(visitor_child_instance, Carer):
-                return JsonResponse({"success":True, "type": "Carer",
-                    "obj": visitor_child_instance.as_dict()})
+                responseObj["type"] = "Carer"
             elif isinstance(visitor_child_instance, OtherVisitor):
-                return JsonResponse({"success":True, "type": "OtherVisitor",
-                    "obj": visitor_child_instance.as_dict()})
+                responseObj["type"] = "OtherVisitor"
+
+            return JsonResponse(responseObj)
     return JsonResponse({"success":False})
 
 
@@ -168,7 +176,10 @@ def reports(request):
 
 @login_required
 def recent(request):
-    return render(request, "recent.html")
+    recent_visitors = Visitor.objects.all().order_by("-visit_date_time").select_related()[:100]
+    recent_visitor = recent_visitors[0]
+    print(len(recent_visitor.activity_set.all()))
+    return render(request, "recent.html", {"recent_visitors": recent_visitors})
 
 @login_required
 def activities(request):

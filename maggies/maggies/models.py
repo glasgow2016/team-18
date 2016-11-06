@@ -10,6 +10,18 @@ GENDER_CHOICES = (
     (OTHER, 'Other'),
 )
 
+def findChildFromVisitor(visitor):
+    matching_pwc = PwC.objects.filter(visitor=visitor)
+    if len(matching_pwc) > 0:
+        return matching_pwc[0]
+    matching_carer = Carer.objects.filter(visitor=visitor)
+    if len(matching_carer) > 0:
+        return matching_carer[0]
+    matching_other = OtherVisitor.objects.filter(visitor=visitor)
+    if len(matching_other) > 0:
+        return matching_other[0]
+    return None
+
 class VisitNature(models.Model):
     nature = models.CharField(max_length=256)
 
@@ -57,6 +69,9 @@ class Visitor(models.Model):
             "nature_of_visit": self.nature_of_visit.pk
         }
 
+    def get_type(self):
+        return findChildFromVisitor(self).get_type()
+
 class CancerInfo(models.Model):
     cancer_site = models.ForeignKey(CancerSite)
     journey_stage = models.ForeignKey(JourneyStage)
@@ -68,7 +83,7 @@ class CancerInfo(models.Model):
         }
 
 class PwC(models.Model):
-    visitor = models.OneToOneField(Visitor)
+    visitor = models.OneToOneField(Visitor, related_name="pwc")
     cancer_info = models.ForeignKey(CancerInfo)
 
     def as_dict(self):
@@ -78,8 +93,11 @@ class PwC(models.Model):
             "cancer_info": self.cancer_info.as_dict()
         }
 
+    def get_type(self):
+        return "PwC"
+
 class Carer(models.Model):
-    visitor = models.OneToOneField(Visitor)
+    visitor = models.OneToOneField(Visitor, related_name="carer")
     pwc_cancer_info = models.ForeignKey(CancerInfo)
     pwc_present = models.BooleanField()
     caring_for = models.ManyToManyField(PwC, blank = True)
@@ -92,8 +110,11 @@ class Carer(models.Model):
             "time_first_seen": self.time_first_seen
         }
 
+    def get_type(self):
+        return "Carer"
+
 class OtherVisitor(models.Model):
-    visitor = models.OneToOneField(Visitor)
+    visitor = models.OneToOneField(Visitor, related_name="otherVisitor")
     description = models.CharField(max_length=256)
 
     def as_dict(self):
@@ -102,6 +123,9 @@ class OtherVisitor(models.Model):
             "first_name": self.first_name,
             "time_first_seen": self.time_first_seen
         }
+
+    def get_type(self):
+        return "OtherVisitor"
 
 # NOTE & TODO: Flush this table every day at, say 02:00
 class DailyIdentifier(models.Model):
@@ -140,6 +164,12 @@ class Activity(models.Model):
 
     def __str__(self):
         return self.name
+
+    def as_dict(self):
+        return {
+            "id": self.id,
+            "name": self.name
+        }
 
     class Meta:
         verbose_name_plural = "activities"

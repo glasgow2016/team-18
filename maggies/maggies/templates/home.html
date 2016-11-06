@@ -2,6 +2,15 @@
 {% load static i18n widget_tweaks %}
 
 {% block extra-css %}
+<style>
+.add-row {
+
+}
+
+.delete-row {
+
+}
+</style>
 {% endblock %}
 
 
@@ -106,9 +115,20 @@
 
 <script>
     $('.activity-formset').formset({
-        addText: 'add activity',
-        deleteText: 'remove'
+        addText: 'Add Activity',
+        deleteText: 'Remove',
+        added: function() {
+            $(".add-row").addClass("btn btn-success");
+            $(".delete-row").addClass("btn btn-warning");
+        },
+        removed: function () {
+            $(".delete-row").addClass("btn btn-warning");
+            $(".add-row").addClass("btn btn-success");
+        }
     });
+
+    $(".add-row").addClass("btn btn-success");
+    $(".delete-row").addClass("btn btn-warning");
 
     $("#id_visitor_name").keyup(function(eventObject) {
         console.log($(this).val());
@@ -189,6 +209,28 @@
                         $("#id_nature_of_visit").val(nature_of_visit);
                         $("#id_cancer_site").val(cancer_site);
                         $("#id_journey_stage").val(journey_stage);
+
+                        var activities = response.activities;
+                        console.log(activities);
+
+                        for (var i=0; i < activities.length; i++) {
+                            $(".add-row").trigger("click");
+                            var activity = activities[i];
+                            console.log(activity);
+                            console.log($("#id_form-"+i+"-activity_name"));
+                            //$("#id_form-"+i+"-activity_name").val(activity.id);
+                        }
+
+                        setTimeout(function() {
+                            for (var i=0; i < activities.length; i++) {
+                                var activity = activities[i];
+                                console.log(activity);
+                                console.log($("select[name='form-"+i+"-activity_name']"));
+                                $("select[name='form-"+i+"-activity_name']").val(activity.id);
+                            }
+                        }, 300);
+
+
 
                     }
                   });
