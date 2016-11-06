@@ -61,6 +61,26 @@ def populate():
 
     # Activities
     yoga = add_activity("Yoga", [], [], [])
+    ng_prostate = add_activity("NG Prostate", [], [], [])
+    caring_for_pwc = add_activity("Caring for Someone with Cancer", [], [], [])
+    lecture_series = add_activity("Lecture Series", [], [], [])
+    cancer_workplace = add_activity("Cancer in the Workplace", [], [], [])
+    gentle_exercise = add_activity("Gentle Exercise", [], [], [])
+    pilates = add_activity("Pilates", [], [], [])
+    prosthesis = add_activity("Prosthesis", [], [], [])
+    look_good = add_activity("Look Good Feel Better", [], [], [])
+    benefits_workshop = add_activity("Benefits Workshop", [], [], [])
+    genetics = add_activity("Genetics", [], [], [])
+    getting_started_treatment = add_activity("Getting Started with Cancer Treatment", [], [], [])
+    talking_heads = add_activity("Talking Heads; Managing Hair Loss", [], [], [])
+    ng_upper_gi = add_activity("NG Upper GI", [], [], [])
+    gardening = add_activity("Gardening", [], [], [])
+    auricular_acupuncture = add_activity("Auricular Acupuncture", [], [], [])
+    psych_support_individual = add_activity("Psych Support Individual", [], [], [])
+    scrapbooking = add_activity("scrapbooking", [], [], [])
+    sleep = add_activity("Sleep", [], [], [])
+    kids_days = add_activity("Kids Days", [], [], [])
+
 
     datetimes = [now_datetime, yesterday_datetime, last_week_datetime, last_month_datetime, half_a_year_ago_datetime, one_year_ago_datetime]
     centres = [glasgow_centre, london_centre]
