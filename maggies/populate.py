@@ -90,7 +90,7 @@ def populate():
     random_pwcs(400, centres, news, genders, natures, sites, stages)
 
 
-    bob_pwc = add_pwc(visit_date_time=aware_now_time(), visit_location=glasgow_centre, is_new_visitor=True, gender="M", nature_of_visit=booked_nature, cancer_info=add_cancer_info(sarcoma_site, curativeintent_stage))
+    bob_pwc = add_pwc(visit_date_time=aware_now_time(), visit_location=glasgow_centre, is_new_visitor=False, gender="M", nature_of_visit=booked_nature, cancer_info=add_cancer_info(sarcoma_site, curativeintent_stage))
 
     add_daily_identifier("Bob", aware_now_time(), visitor=bob_pwc.visitor)
 
@@ -98,7 +98,7 @@ def populate():
 
     add_daily_identifier("Elizabeth", aware_now_time(), visitor=elizabeth_pwc.visitor)
 
-    billy_pwc = add_pwc(visit_date_time=aware_now_time(), visit_location=glasgow_centre, is_new_visitor=True, gender="M", nature_of_visit=booked_nature, cancer_info=add_cancer_info(sarcoma_site, curativeintent_stage))
+    billy_pwc = add_pwc(visit_date_time=aware_now_time(), visit_location=glasgow_centre, is_new_visitor=False, gender="M", nature_of_visit=booked_nature, cancer_info=add_cancer_info(sarcoma_site, curativeintent_stage))
 
     add_daily_identifier("Billy", aware_now_time(), visitor=billy_pwc.visitor)
 
