@@ -1,5 +1,6 @@
 import os
 from datetime import datetime
+from random import choice
 
 def populate():
     if not User.objects.filter(username="test").exists():
@@ -49,7 +50,31 @@ def populate():
     # Centre values
     glasgow_centre = add_centre("Glasgow", "10 Dumbarton Road, Glasgow G11 6PA")
 
-    add_pwc(visit_location=glasgow_centre, is_new_visitor=True, gender="M", nature_of_visit=booked_nature, cancer_info=add_cancer_info(sarcoma_site, curativeintent_stage))
+    centres = [glasgow_centre]
+    news = [0,1]
+    genders = ["M", "F"]
+    natures = [booked_nature, dropin_nature, programme_nature, telephonesupport_nature,
+                emailsupport_nature, fundraising_nature, outreach_nature]
+    sites = [lung_site, breast_site, lowergi_site, uppergi_site, braincns_site, prostate_site, headneck_site, 
+                gynae_site, haemat_site, liver_site, pancreatic_site, rare_site, sarcoma_site, skinmel_site, testicular_site, 
+                unknown_site, urolog_site, notstated_site]
+    stages = [prediagnosis_stage, curativeintent_stage, posttreatement_curativeintent_stage, palliative_stage,
+                endoflife_stage, bereaved_stage, notstated_stage]
+
+    #add_pwc(visit_location=glasgow_centre, is_new_visitor=True, gender="M", nature_of_visit=booked_nature, cancer_info=add_cancer_info(sarcoma_site, curativeintent_stage))
+    random_pwcs(10, centres, news, genders, natures, sites, stages)
+
+
+def random_pwcs(n, centres, news, genders, natures, sites, stages):
+    for i in range(0,n):
+        rCentre = choice(centres)
+        rNew = choice(news)
+        rGender = choice(genders)
+        rNature = choice(natures)
+        rSite = choice(sites)
+        rStage = choice(stages)
+        add_pwc(visit_location=rCentre, is_new_visitor=rNew, gender=rGender, nature_of_visit=rNature, cancer_info=add_cancer_info(rSite, rStage))
+
 
 def add_pwc(visit_location, is_new_visitor, gender, nature_of_visit, cancer_info):
     v = Visitor.objects.get_or_create(visit_date_time=datetime.now(),
