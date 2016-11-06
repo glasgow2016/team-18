@@ -65,6 +65,13 @@ class DailyIdentifier(models.Model):
     time_first_seen = models.DateTimeField()
     visitor = models.OneToOneField(Visitor)
 
+    def as_dict(self):
+        return {
+            "id": self.id,
+            "first_name": self.first_name,
+            "time_first_seen": self.time_first_seen
+        }
+
 class StaffRole(models.Model):
     description = models.CharField(max_length=256)
 
