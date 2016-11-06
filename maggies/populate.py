@@ -52,13 +52,16 @@ def populate():
     glasgow_centre = add_centre("Glasgow", "10 Dumbarton Road, Glasgow G11 6PA")
     london_centre = add_centre("London", "3, Thames Wharf, Rainville Rd, London W6 9HA")
 
+    # Activities
+    yoga = add_activity("Yoga", [], [], [])
+
     centres = [glasgow_centre, london_centre]
     news = [0,1]
     genders = ["M", "F"]
     natures = [booked_nature, dropin_nature, programme_nature, telephonesupport_nature,
                 emailsupport_nature, fundraising_nature, outreach_nature]
-    sites = [lung_site, breast_site, lowergi_site, uppergi_site, braincns_site, prostate_site, headneck_site, 
-                gynae_site, haemat_site, liver_site, pancreatic_site, rare_site, sarcoma_site, skinmel_site, testicular_site, 
+    sites = [lung_site, breast_site, lowergi_site, uppergi_site, braincns_site, prostate_site, headneck_site,
+                gynae_site, haemat_site, liver_site, pancreatic_site, rare_site, sarcoma_site, skinmel_site, testicular_site,
                 unknown_site, urolog_site, notstated_site]
     stages = [prediagnosis_stage, curativeintent_stage, posttreatement_curativeintent_stage, palliative_stage,
                 endoflife_stage, bereaved_stage, notstated_stage]
@@ -164,15 +167,32 @@ def add_centre(name, address):
                                         address=address)[0]
     return c
 
+def add_activity(name, locations, participants, coordinators):
+    a = Activity.objects.get_or_create(name=name)[0]
+
+    for location in locations:
+        a.location.add(locations)
+
+    for participant in participants:
+        a.participants.add(participant)
+
+    for coordinator in coordinators:
+        a.coordinators.add(coordinator)
+
+    a.save()
+
+    return a
+
 def aware_now_time():
     return pytz.utc.localize(datetime.now())
+
 
 if __name__ == '__main__':
     print("Starting population script...")
     os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'maggies.settings')
     from django.core.wsgi import get_wsgi_application
     application = get_wsgi_application()
-    from maggies.models import Visitor, CancerSite, VisitNature, JourneyStage, PwC, Carer, OtherVisitor, CancerInfo, Centre, DailyIdentifier
+    from maggies.models import Visitor, CancerSite, VisitNature, JourneyStage, PwC, Carer, OtherVisitor, CancerInfo, Centre, DailyIdentifier, Activity
     from django.contrib.auth.models import User
     from django.conf import settings
     populate()
