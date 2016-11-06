@@ -180,8 +180,8 @@ def logout_page(request):
     return redirect('/')
 
 @login_required
-def reports(request):
-    return render(request, "reports.html")
+def numSeen(request):
+    return render(request, "numSeen.html")
 
 @login_required
 def recent(request):
@@ -189,10 +189,6 @@ def recent(request):
     recent_visitor = recent_visitors[0]
     print(len(recent_visitor.activity_set.all()))
     return render(request, "recent.html", {"recent_visitors": recent_visitors})
-
-@login_required
-def activities(request):
-    return render(request, "activities.html")
 
 @login_required
 def ajax_report_visitor_count(request):

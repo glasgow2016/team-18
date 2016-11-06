@@ -37,8 +37,7 @@
               <ul class="nav navbar-nav">
                 <li {% if request.path == '/' %}class="active"{% endif %}><a href="/">Add Visitor</a></li>
                 <li {% if request.path == '/recent' %}class="active"{% endif %}><a href="/recent">View Recent Entries</a></li>
-                <li {% if request.path == '/activities' %}class="active"{% endif %}><a href="/activities">View Activity Attenders</a></li>
-                <li {% if request.path == '/reports' %}class="active"{% endif %}><a href="/reports">View Reports</a></li>
+                <li {% if request.path == '/numSeen' %}class="active"{% endif %}><a href="/numSeen">View Number of People Seen</a></li>
               </ul>
               <ul class="nav navbar-nav navbar-float-right">
                 <li><a href="/logout">Logout</a></li>
@@ -54,7 +53,7 @@
 
             <hr>
             <footer>
-                <p>&copy; 2016 Maggie's</p>
+                <p style="text-align: center">&copy; 2016 Maggie's</p>
             </footer>
         </div>
 
