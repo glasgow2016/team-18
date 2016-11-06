@@ -86,6 +86,38 @@ def ajax_check_for_daily_ids(request):
             return JsonResponse({"success": True, "items": dictionaries})
     return JsonResponse({"success": False})
 
+def findChildFromVisitor(visitor):
+    matching_pwc = PwC.objects.filter(visitor=visitor)
+    if len(matching_pwc) > 0:
+        return matching_pwc[0]
+    matching_carer = Carer.objects.filter(visitor=visitor)
+    if len(matching_carer) > 0:
+        return matching_carer[0]
+    matching_other = OtherVisitor.objects.filter(visitor=visitor)
+    if len(matching_other) > 0:
+        return matching_other[0]
+    return None
+
+
+def ajax_get_autofill_details(request):
+    if request.method == "POST":
+        if "dailyid_id" in request.POST:
+            dailyid_id = request.POST["dailyid_id"]
+            dailyid_obj = DailyIdentifier.objects.filter(pk=dailyid_id)[0]
+            visitor = dailyid_obj.visitor
+            visitor_child_instance = findChildFromVisitor(visitor)
+            if isinstance(visitor_child_instance, PwC):
+                return JsonResponse({"success":True, "type": "PwC",
+                    "obj": visitor_child_instance.as_dict()})
+            elif isinstance(visitor_child_instance, Carer):
+                return JsonResponse({"success":True, "type": "Carer",
+                    "obj": visitor_child_instance.as_dict()})
+            elif isinstance(visitor_child_instance, OtherVisitor):
+                return JsonResponse({"success":True, "type": "OtherVisitor",
+                    "obj": visitor_child_instance.as_dict()})
+    return JsonResponse({"success":False})
+
+
 
 def login_page(request):
     if request.method == "POST":
