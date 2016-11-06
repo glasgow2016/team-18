@@ -66,7 +66,8 @@ class Visitor(models.Model):
             "visit_location": self.visit_location.as_dict(),
             "is_new_visitor": self.is_new_visitor,
             "gender": self.gender,
-            "nature_of_visit": self.nature_of_visit.pk
+            "nature_of_visit": self.nature_of_visit.pk,
+            "visitor_type": self.get_type()
         }
 
     def get_type(self):
@@ -79,7 +80,9 @@ class CancerInfo(models.Model):
     def as_dict(self):
         return {
             "cancer_site": self.cancer_site.pk,
-            "journey_stage": self.journey_stage.pk
+            "cancer_site_str": self.cancer_site.name,
+            "journey_stage": self.journey_stage.pk,
+            "journey_stage_str": self.journey_stage.stage
         }
 
 class PwC(models.Model):
@@ -106,8 +109,8 @@ class Carer(models.Model):
     def as_dict(self):
         return {
             "id": self.id,
-            "first_name": self.first_name,
-            "time_first_seen": self.time_first_seen
+            "pwc_cancer_info": self.pwc_cancer_info.as_dict(),
+            "visitor": self.visitor.as_dict()
         }
 
     def get_type(self):
@@ -121,7 +124,8 @@ class OtherVisitor(models.Model):
         return {
             "id": self.id,
             "first_name": self.first_name,
-            "time_first_seen": self.time_first_seen
+            "time_first_seen": self.time_first_seen,
+            "visitor": self.visitor.as_dict()
         }
 
     def get_type(self):
@@ -137,7 +141,8 @@ class DailyIdentifier(models.Model):
         return {
             "id": self.id,
             "first_name": self.first_name,
-            "time_first_seen": self.time_first_seen
+            "time_first_seen": self.time_first_seen,
+            "subclass_info": findChildFromVisitor(self.visitor).as_dict()
         }
 
 class StaffRole(models.Model):
