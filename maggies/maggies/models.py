@@ -84,6 +84,8 @@ class Activity(models.Model):
     location = models.ManyToManyField(Centre)
     participants = models.ManyToManyField(Visitor)
     coordinators = models.ManyToManyField(StaffMember)
+    class Meta:
+        verbose_name_plural = "activities"
 
 class KnownVisitors(models.Model):
     first_name = models.CharField(max_length=256)
