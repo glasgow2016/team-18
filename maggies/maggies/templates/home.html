@@ -6,8 +6,11 @@
 
 
 {% block content %}
+</div> <!-- end container -->
+
+<div class="fluid-container">
 <div class="row">
-    <div class="col-md-6 col-md-offset-3">
+    <div class="col-md-5 col-md-offset-2">
       <form class="form-horizontal" role="form" action="." method="post">
           {% csrf_token %}
           {% for field in form %}
@@ -46,6 +49,7 @@
         </ul>
     </div>
 </div>
+</div>
 {% endblock %}
 
 {% block extra-js %}
@@ -72,18 +76,66 @@
                   console.log(items.length);
                   for (var i=0; i < items.length; i++) {
                       var date = new Date(items[i].time_first_seen);
-                      var html = "<a href='#' class='list-group-item'><h2>";
+                      var html = "<a href='#' class='list-group-item maggies-autofill' data-id='";
+                      html += items[i].id;
+                      html += "' data-name='";
                       html += items[i].first_name;
-                      html += "</h2><p>";
-
+                      html += "'><h2>";
+                      html += items[i].first_name;
+                      html += "</h2><p>Seen Today @ ";
                       html += date.toTimeString().replace(/.*(\d{2}:\d{2}).*/, "$1");
                       html += "</p></a>";
                       $("#list-of-hits").append(html);
                   }
               }
-              /*for (var item : response) {
-                  list-of-hits.append("<li>hi</li>")
-              }*/
+
+              $(".maggies-autofill").click(function(eventObject) {
+                  var $this = $(this);
+                  var id = $this.attr("data-id");
+                  console.log("ID: " + id);
+                  $.ajax({
+                    url: "/ajax_get_autofill_details",
+                    method: "POST",
+                    data: { dailyid_id: id },
+                    cache: false
+                  }).done(function(response) {
+                    console.log(response);
+                    if (response.success) {
+                        var type = response.type;
+
+                        var obj = response.obj;
+                        var visitor_name = $this.attr("data-name");
+                        var cancer_site = obj.cancer_info.cancer_site;
+                        var journey_stage = obj.cancer_info.journey_stage;
+                        var gender = obj.visitor.gender;
+                        var is_new_visitor = obj.visitor.is_new_visitor;
+                        var nature_of_visit = obj.visitor.nature_of_visit;
+                        var visitor_id = obj.visitor.id;
+
+                        var visitor_type;
+                        if (type === "PwC") {
+                            visitor_type = "PWC";
+                        } else if (type === "Carer") {
+                            visitor_type = "CAR";
+                        } else if (type === "Other") {
+                            visitor_type = "OTH";
+                        }
+
+                        console.log(nature_of_visit);
+
+
+                        $("#id_visitor_name").val(visitor_name);
+                        $("#id_visitor_type").val(visitor_type);
+                        $("#id_is_new_visitor").val(is_new_visitor);
+                        $("#id_visitor_gender").val(gender);
+                        $("#id_nature_of_visit").val(nature_of_visit);
+                        $("#id_cancer_site").val(cancer_site);
+                        $("#id_journey_stage").val(journey_stage);
+
+                    }
+                  });
+                  console.log($this);
+              });
           });
     });
 </script>

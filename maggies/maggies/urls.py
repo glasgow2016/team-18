@@ -26,5 +26,6 @@ urlpatterns = [
     url(r'^activities', views.activities),
     url(r'^ajax_report_visitor_count', views.ajax_report_visitor_count),
     url(r'^ajax_check_for_daily_ids', views.ajax_check_for_daily_ids),
+    url(r'^ajax_get_autofill_details', views.ajax_get_autofill_details),
     url(r'^', views.home),
 ]
