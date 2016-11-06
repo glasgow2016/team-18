@@ -124,5 +124,15 @@ def activities(request):
 @login_required
 def ajax_report_visitor_count(request):
     if request.method == "POST":
-        print(request)
-    return
+        startDate = datetime.strptime(request.POST['start_date'], '%Y-%m-%d')
+        endDate = datetime.strptime(request.POST['end_date'], '%Y-%m-%d')
+        allWithinDates = Visitor.objects.filter(visit_date_time__range=(startDate,endDate))
+        dictOfDates = {}
+        for visitor in allWithinDates:
+            curDate = visitor.visit_date_time.date()
+            if curDate not in dictOfDates:
+                dictOfDates[curDate] = 1
+            else:
+                dictOfDates[curDate] += 1
+        return JsonResponse({"success": True}, "dictOfDates": dictOfDates)
+    return JsonResponse({"success": False})

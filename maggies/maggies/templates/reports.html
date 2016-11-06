@@ -25,8 +25,8 @@
   $('#date').daterangepicker();
 
   $('#date').on('apply.daterangepicker', function(ev, picker) {
-    $.ajax('/get_report_visitor_count', {
-      url: "/get_report_visitor_count",
+    $.ajax({
+      url: "/ajax_report_visitor_count",
       method: "POST",
       data: {
         start_date: picker.startDate.format('YYYY-MM-DD'),
@@ -34,7 +34,7 @@
       },
       cache: false
     }).done(function(response) {
-
+        console.log("response")
     })
   });
 </script>
