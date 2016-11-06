@@ -11,31 +11,80 @@
 <div class="fluid-container">
 <div class="row">
     <div class="col-md-5 col-md-offset-2">
+        {% if message %}
+        <h3>{{ message }}</h3>
+        {% endif %}
+
       <form class="form-horizontal" role="form" action="." method="post">
           {% csrf_token %}
           {% for field in form %}
-              {% if field.errors %}
-                  <div class="form-group has-error">
-                      <label class="col-sm-4 control-label" for="id_{{ field.name }}">{{ field.label }}</label>
-                      <div class="col-sm-8 {% if field.label == 'First visit?' %}checkbox-style{% endif %}">
-                          {{ field|attr:"class:form-control" }}
-                          <span class="help-block">
-                              {% for error in  field.errors %}{{ error }}{% endfor %}
-                          </span>
-                      </div>
-                  </div>
+              {% if field.label == 'Has Been Seen Today' or field.label == 'DailyIdentifier ID' %}
+                <div class="hidden">
+                    {{ field }}
+                </div>
+
               {% else %}
-                  <div class="form-group">
-                      <label class="col-sm-4 control-label" for="id_{{ field.name }}">{{ field.label }}</label>
-                      <div class="col-sm-8 {% if field.label == 'First visit?' %}checkbox-style{% endif %}">
-                          {{ field|attr:"class:form-control" }}
-                          {% if field.help_text %}
-                              <p class="help-block"><small>{{ field.help_text }}</small></p>
-                          {% endif %}
+                  {% if field.errors %}
+                      <div class="form-group has-error">
+                          <label class="col-sm-4 control-label" for="id_{{ field.name }}">{{ field.label }}</label>
+                          <div class="col-sm-8 {% if field.label == 'First visit?' %}checkbox-style{% endif %}">
+                              {{ field|attr:"class:form-control" }}
+                              <span class="help-block">
+                                  {% for error in  field.errors %}{{ error }}{% endfor %}
+                              </span>
+                          </div>
                       </div>
-                  </div>
+                  {% else %}
+                      <div class="form-group">
+                          <label class="col-sm-4 control-label" for="id_{{ field.name }}">{{ field.label }}</label>
+                          <div class="col-sm-8 {% if field.label == 'First visit?' %}checkbox-style{% endif %}">
+                              {{ field|attr:"class:form-control" }}
+                              {% if field.help_text %}
+                                  <p class="help-block"><small>{{ field.help_text }}</small></p>
+                              {% endif %}
+                          </div>
+                      </div>
+                  {% endif %}
               {% endif %}
           {% endfor %}
+
+          <h3>Activities</h3>
+
+          {{ activityFormSet.management_form }}
+
+        {% for activity_form in activityFormSet %}
+            <div class="activity-formset">
+                {% for field in activity_form %}
+                    {% if field.errors %}
+                        <div class="form-group has-error">
+                            <label class="col-sm-4 control-label" for="id_{{ field.name }}">{{ field.label }}</label>
+                            <div class="col-sm-8 {% if field.label == 'First visit?' %}checkbox-style{% endif %}">
+                                {{ field|attr:"class:form-control" }}
+                                <span class="help-block">
+                                    {% for error in  field.errors %}{{ error }}{% endfor %}
+                                </span>
+                            </div>
+                        </div>
+                    {% else %}
+                        <div class="form-group">
+                            <label class="col-sm-4 control-label" for="id_{{ field.name }}">{{ field.label }}</label>
+                            <div class="col-sm-8 {% if field.label == 'First visit?' %}checkbox-style{% endif %}">
+                                {{ field|attr:"class:form-control" }}
+                                {% if field.help_text %}
+                                    <p class="help-block"><small>{{ field.help_text }}</small></p>
+                                {% endif %}
+                            </div>
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            </div>
+        {% endfor %}
+
+        {% if activity_form.non_form_errors %}
+            {% for error in activity_form.non_form_errors %}
+                {{ error|escape }}
+            {% endfor %}
+        {% endif %}
           <div class="form-group">
               <div class="col-sm-offset-4 col-sm-8">
                   <button type="submit" class="btn btn-primary">{% trans "Submit" %}</button>
@@ -53,7 +102,14 @@
 {% endblock %}
 
 {% block extra-js %}
+<script src="{% static "js/jquery.formset.js" %}"></script>
+
 <script>
+    $('.activity-formset').formset({
+        addText: 'add activity',
+        deleteText: 'remove'
+    });
+
     $("#id_visitor_name").keyup(function(eventObject) {
         console.log($(this).val());
         $("#list-of-hits").empty();
@@ -123,6 +179,8 @@
 
                         console.log(nature_of_visit);
 
+                        $("#id_has_been_seen_today").prop('checked', true);
+                        $("#id_dailyid_id").val(id);
 
                         $("#id_visitor_name").val(visitor_name);
                         $("#id_visitor_type").val(visitor_type);

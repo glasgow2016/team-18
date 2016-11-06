@@ -137,6 +137,10 @@ class Activity(models.Model):
     location = models.ManyToManyField(Centre)
     participants = models.ManyToManyField(Visitor)
     coordinators = models.ManyToManyField(StaffMember)
+
+    def __str__(self):
+        return self.name
+
     class Meta:
         verbose_name_plural = "activities"
 
