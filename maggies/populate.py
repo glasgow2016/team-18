@@ -49,6 +49,7 @@ def populate():
 
     # Centre values
     glasgow_centre = add_centre("Glasgow", "10 Dumbarton Road, Glasgow G11 6PA")
+    london_centre = add_centre("London", "3, Thames Wharf, Rainville Rd, London W6 9HA")
 
     centres = [glasgow_centre]
     news = [0,1]
