@@ -15,7 +15,7 @@
 
 
 {% block content %}
-</div> <!-- end container -->
+</div> <!-- end restricted container -->
 
 <div class="fluid-container">
 <div class="row">
@@ -56,8 +56,6 @@
                   {% endif %}
               {% endif %}
           {% endfor %}
-
-          <h3>Activities</h3>
 
           {{ activityFormSet.management_form }}
 
@@ -118,17 +116,17 @@
         addText: 'Add Activity',
         deleteText: 'Remove',
         added: function() {
-            $(".add-row").addClass("btn btn-success");
-            $(".delete-row").addClass("btn btn-warning");
+            $(".add-row").addClass("btn btn-success new-button-style bigMargin");
+            $(".delete-row").addClass("btn btn-warning new-button-style bigMargin");
         },
         removed: function () {
-            $(".delete-row").addClass("btn btn-warning");
-            $(".add-row").addClass("btn btn-success");
+            $(".delete-row").addClass("btn btn-warning new-button-style bigMargin");
+            $(".add-row").addClass("btn btn-success new-button-style bigMargin");
         }
     });
 
-    $(".add-row").addClass("btn btn-success");
-    $(".delete-row").addClass("btn btn-warning");
+    $(".add-row").addClass("btn btn-success new-button-style bigMargin");
+    $(".delete-row").addClass("btn btn-warning new-button-style bigMargin");
 
     $("#id_visitor_name").keyup(function(eventObject) {
         console.log($(this).val());

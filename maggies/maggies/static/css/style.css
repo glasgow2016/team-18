@@ -37,3 +37,12 @@ text {
     font-family: Arial;
     font-size: 9pt;
 }
+
+.new-button-style {
+  margin-right: 5px;
+  margin-bottom: 10px;
+}
+
+.bigMargin {
+  margin-left: 271px;
+}
