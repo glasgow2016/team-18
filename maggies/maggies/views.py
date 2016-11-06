@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
 from django.http import JsonResponse
-from .forms import VisitorForm, PWC, CARER, OTHER
+from .forms import VisitorForm, PWC, CARER, OTHER, ReportsForm, DAY, WEEK, MONTH
 from .models import PwC, Carer, OtherVisitor, CancerInfo, Visitor, DailyIdentifier
 
 from datetime import datetime
@@ -112,7 +112,17 @@ def logout_page(request):
 
 @login_required
 def reports(request):
-    return render(request, "reports.html")
+    if request.method=="POST":
+        form = ReportsForm(request.POST)
+        if form.is_valid():
+            print("Form is valid.")
+            form_report_type = form.cleaned_data["report_timeframe"]
+
+
+
+    form = ReportsForm()
+
+    return render(request, "reports.html", {"form": form})
 
 @login_required
 def recent(request):
