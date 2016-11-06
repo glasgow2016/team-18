@@ -34,7 +34,9 @@
       },
       cache: false
     }).done(function(response) {
-        console.log("response")
+        if (response.success) {
+          var visitorCountRawData = response.leDates;
+        }
     })
   });
 </script>

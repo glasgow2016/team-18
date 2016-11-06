@@ -166,5 +166,9 @@ def ajax_report_visitor_count(request):
                 dictOfDates[curDate] = 1
             else:
                 dictOfDates[curDate] += 1
-        return JsonResponse({"success": True, "dictOfDates": dictOfDates})
+        listOfDictOfDates = []
+        for date in dictOfDates:
+            listOfDictOfDates.append({'date': date, 'count': dictOfDates[date]})
+
+        return JsonResponse({"success": True, "leDates": listOfDictOfDates})
     return JsonResponse({"success": False})
