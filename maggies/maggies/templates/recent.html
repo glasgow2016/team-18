@@ -37,7 +37,7 @@
                         {% if visit.get_type == "PwC" %}
                         <td>{{ visit.pwc.cancer_info.cancer_site }}</td>
                         <td>{{ visit.pwc.cancer_info.journey_stage }}</td>
-                        {% elif visit.pwc_cancer_info %}
+                        {% elif visit.get_type == "Carer" %}
                         <td>{{ visit.carer.pwc_cancer_info.cancer_site }}</td>
                         <td>{{ visit.carer.pwc_cancer_info.journey_stage }}</td>
                         {% else %}

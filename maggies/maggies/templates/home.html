@@ -215,20 +215,14 @@
 
                         for (var i=0; i < activities.length; i++) {
                             $(".add-row").trigger("click");
-                            var activity = activities[i];
-                            console.log(activity);
-                            console.log($("#id_form-"+i+"-activity_name"));
-                            //$("#id_form-"+i+"-activity_name").val(activity.id);
                         }
 
                         setTimeout(function() {
                             for (var i=0; i < activities.length; i++) {
                                 var activity = activities[i];
-                                console.log(activity);
-                                console.log($("select[name='form-"+i+"-activity_name']"));
                                 $("select[name='form-"+i+"-activity_name']").val(activity.id);
                             }
-                        }, 300);
+                        }, 100);
 
 
 
