@@ -106,7 +106,7 @@ def populate():
 @transaction.atomic
 def random_pwcs(n, centres, news, genders, natures, sites, stages):
     for i in range(n):
-        rTime = aware_now_time() - timedelta(days=-randrange(n))
+        rTime = aware_now_time() - timedelta(days=randrange(n))
         rCentre = choice(centres)
         rNew = choice(news)
         rGender = choice(genders)
