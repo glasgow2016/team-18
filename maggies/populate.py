@@ -1,5 +1,5 @@
 import os
-from datetime import datetime
+from datetime import datetime, timedelta
 from random import choice
 
 def populate():
@@ -8,6 +8,14 @@ def populate():
         super_user.is_superuser = True
         super_user.is_staff = True
         super_user.save()
+
+    # Some datetimes
+    now_datetime = datetime.now()
+    yesterday_datetime = now_datetime - timedelta(days=-3)
+    last_week_datetime = now_datetime - timedelta(days=-7)
+    last_month_datetime = now_datetime - timedelta(days=-30)
+    half_a_year_ago_datetime = now_datetime - timedelta(days=-364/2)
+    one_year_ago_datetime = now_datetime - timedelta(days=-365)
 
     # Cancer Site values
     lung_site = add_cancer_site("Lung")
@@ -51,7 +59,8 @@ def populate():
     glasgow_centre = add_centre("Glasgow", "10 Dumbarton Road, Glasgow G11 6PA")
     london_centre = add_centre("London", "3, Thames Wharf, Rainville Rd, London W6 9HA")
 
-    centres = [glasgow_centre]
+    datetimes = [now_datetime, yesterday_datetime, last_week_datetime, last_month_datetime, half_a_year_ago_datetime, one_year_ago_datetime]
+    centres = [glasgow_centre, london_centre]
     news = [0,1]
     genders = ["M", "F"]
     natures = [booked_nature, dropin_nature, programme_nature, telephonesupport_nature,
@@ -63,7 +72,7 @@ def populate():
                 endoflife_stage, bereaved_stage, notstated_stage]
 
     #add_pwc(visit_location=glasgow_centre, is_new_visitor=True, gender="M", nature_of_visit=booked_nature, cancer_info=add_cancer_info(sarcoma_site, curativeintent_stage))
-    random_pwcs(10, centres, news, genders, natures, sites, stages)
+    random_pwcs(10, datetimes, centres, news, genders, natures, sites, stages)
 
 
     bob_pwc = add_pwc(visit_location=glasgow_centre, is_new_visitor=True, gender="M", nature_of_visit=booked_nature, cancer_info=add_cancer_info(sarcoma_site, curativeintent_stage))
@@ -79,7 +88,7 @@ def populate():
     add_daily_identifier("Billy", datetime.now(), visitor=billy_pwc.visitor)
 
 
-def random_pwcs(n, centres, news, genders, natures, sites, stages):
+def random_pwcs(n, datetimes, centres, news, genders, natures, sites, stages):
     for i in range(0,n):
         rCentre = choice(centres)
         rNew = choice(news)
