@@ -87,7 +87,7 @@ def populate():
     stages = [prediagnosis_stage, curativeintent_stage, posttreatement_curativeintent_stage, palliative_stage,
                 endoflife_stage, bereaved_stage, notstated_stage]
 
-    random_pwcs(400, centres, news, genders, natures, sites, stages)
+    random_pwcs(20000, centres, news, genders, natures, sites, stages)
 
 
     bob_pwc = add_pwc(visit_date_time=aware_now_time(), visit_location=glasgow_centre, is_new_visitor=False, gender="M", nature_of_visit=booked_nature, cancer_info=add_cancer_info(sarcoma_site, curativeintent_stage))
@@ -106,7 +106,7 @@ def populate():
 @transaction.atomic
 def random_pwcs(n, centres, news, genders, natures, sites, stages):
     for i in range(n):
-        rTime = aware_now_time() - timedelta(days=randrange(50*n))
+        rTime = aware_now_time() - timedelta(days=randrange(400))
         rCentre = choice(centres)
         rNew = choice(news)
         rGender = choice(genders)
