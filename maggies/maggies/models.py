@@ -29,6 +29,7 @@ class JourneyStage(models.Model):
         return self.stage
 
 class Visitor(models.Model):
+    visit_date = models.DateField()
     is_new_visitor = models.BooleanField()
     gender = models.CharField(max_length=1, choices=GENDER_CHOICES)
     nature_of_visit = models.ForeignKey(VisitNature)
