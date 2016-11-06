@@ -4,6 +4,7 @@ from random import choice, randrange
 import pytz
 from django.db import transaction
 
+# Fill some tables with test data
 def populate():
     if not User.objects.filter(username="test").exists():
         super_user = User.objects.create_user('test', 'test@test.com', 'test')
@@ -103,6 +104,7 @@ def populate():
     add_daily_identifier("Billy", aware_now_time(), visitor=billy_pwc.visitor)
 
 
+# Generation function for n random PwCs
 @transaction.atomic
 def random_pwcs(n, centres, news, genders, natures, sites, stages):
     for i in range(n):
@@ -115,12 +117,14 @@ def random_pwcs(n, centres, news, genders, natures, sites, stages):
         rStage = choice(stages)
         add_pwc(visit_date_time=rTime,visit_location=rCentre, is_new_visitor=rNew, gender=rGender, nature_of_visit=rNature, cancer_info=add_cancer_info(rSite, rStage))
 
+# Function to add entries of DailyIdentifiers to the database
 def add_daily_identifier(first_name, time_first_seen, visitor):
     d = DailyIdentifier.objects.get_or_create(first_name=first_name,
                                             time_first_seen=time_first_seen,
                                             visitor=visitor)
     return d
 
+# Function to add entries of PwC to the database
 def add_pwc(visit_date_time, visit_location, is_new_visitor, gender, nature_of_visit, cancer_info):
     v = Visitor.objects.get_or_create(visit_date_time=visit_date_time,
                                         visit_location=visit_location,
@@ -132,6 +136,7 @@ def add_pwc(visit_date_time, visit_location, is_new_visitor, gender, nature_of_v
                                         cancer_info=cancer_info)[0]
     return p
 
+# Function to add entries of Carer to the database
 def add_carer(visit_date_time, visit_location, is_new_visitor, gender, nature_of_visit, pwc_cancer_info, pwc_present, caring_for, relationship):
     v = Visitor.objects.get_or_create(visit_date_time=visit_date_time,
                                         visit_location=visit_location,
@@ -146,6 +151,7 @@ def add_carer(visit_date_time, visit_location, is_new_visitor, gender, nature_of
                                         relationship=relationship)[0]
     return p
 
+# Function to add entries of OtherVisitor to the database
 def add_othervisitor(visit_date_time, visit_location, description, is_new_visitor, gender, nature_of_visit):
     v = Visitor.objects.get_or_create(visit_date_time=visit_date_time,
                                         visit_location=visit_location,
@@ -157,23 +163,28 @@ def add_othervisitor(visit_date_time, visit_location, description, is_new_visito
                                         description=description)[0]
     return p
 
+# Function to add entries of CancerInfo to the database
 def add_cancer_info(cancerSite, journeyStage):
     c = CancerInfo.objects.get_or_create(cancer_site=cancerSite,
                                         journey_stage=journeyStage)[0]
     return c
 
+# Function to add entries of CancerSite to the database
 def add_cancer_site(name):
     c = CancerSite.objects.get_or_create(name=name)[0]
     return c
 
+# Function to add entries of VisitNature to the database
 def add_visit_nature(nature):
     c = VisitNature.objects.get_or_create(nature=nature)[0]
     return c
 
+# Function to add entries of JourneyStage to the database
 def add_journey_stage(stage):
     j = JourneyStage.objects.get_or_create(stage=stage)[0]
     return j
 
+# Function to add entries of StaffMember to the database
 def add_staff_member(user, first_name, surname, role, work_location, clearance_level, assisted):
     p = StaffMember.objects.get_or_create(user=user,
                                         first_name=first_name,
@@ -184,11 +195,13 @@ def add_staff_member(user, first_name, surname, role, work_location, clearance_l
                                         assisted=assisted)[0]
     return p
 
+# Function to add entries of Centre to the database
 def add_centre(name, address):
     c = Centre.objects.get_or_create(name=name,
                                         address=address)[0]
     return c
 
+# Function to add entries of Activity to the database
 def add_activity(name, locations, participants, coordinators):
     a = Activity.objects.get_or_create(name=name)[0]
 
@@ -205,6 +218,7 @@ def add_activity(name, locations, participants, coordinators):
 
     return a
 
+# Utility function to get a timezone aware current datetime
 def aware_now_time():
     return pytz.utc.localize(datetime.now())
 
