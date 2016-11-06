@@ -59,6 +59,13 @@ class DailyIdentifier(models.Model):
     time_first_seen = models.DateTimeField()
     visitor = models.OneToOneField(Visitor)
 
+    def as_dict(self):
+        return {
+            "id": self.id,
+            "first_name": self.first_name,
+            "time_first_seen": self.time_first_seen
+        }
+
 class Centre(models.Model):
     name = models.CharField(max_length=256)
     address = models.CharField(max_length=256)

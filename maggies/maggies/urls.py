@@ -24,5 +24,6 @@ urlpatterns = [
     url(r'^reports', views.reports),
     url(r'^recent', views.recent),
     url(r'^activities', views.activities),
+    url(r'^ajax_check_for_daily_ids', views.ajax_check_for_daily_ids),
     url(r'^', views.home),
 ]

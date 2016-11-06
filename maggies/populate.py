@@ -47,7 +47,20 @@ def populate():
     notstated_stage = add_journey_stage("Not Stated")
 
 
-    add_pwc(is_new_visitor=True, gender="M", nature_of_visit=booked_nature, cancer_info=add_cancer_info(sarcoma_site, curativeintent_stage))
+    bob_pwc = add_pwc(is_new_visitor=True, gender="M", nature_of_visit=booked_nature, cancer_info=add_cancer_info(sarcoma_site, curativeintent_stage))
+
+    add_daily_identifier("Bob", datetime.now(), visitor=bob_pwc.visitor)
+
+    elizabeth_pwc = add_pwc(is_new_visitor=True, gender="F", nature_of_visit=booked_nature, cancer_info=add_cancer_info(testicular_site, endoflife_stage))
+
+    add_daily_identifier("Elizabeth", datetime.now(), visitor=elizabeth_pwc.visitor)
+
+
+def add_daily_identifier(first_name, time_first_seen, visitor):
+    d = DailyIdentifier.objects.get_or_create(first_name=first_name,
+                                            time_first_seen=time_first_seen,
+                                            visitor=visitor)
+    return d
 
 def add_pwc(is_new_visitor, gender, nature_of_visit, cancer_info):
     v = Visitor.objects.get_or_create(visit_date=datetime.now(),
@@ -115,7 +128,7 @@ if __name__ == '__main__':
     os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'maggies.settings')
     from django.core.wsgi import get_wsgi_application
     application = get_wsgi_application()
-    from maggies.models import Visitor, CancerSite, VisitNature, JourneyStage, PwC, Carer, OtherVisitor, CancerInfo
+    from maggies.models import Visitor, CancerSite, VisitNature, JourneyStage, PwC, Carer, OtherVisitor, CancerInfo, DailyIdentifier
     from django.contrib.auth.models import User
     from django.conf import settings
     populate()
