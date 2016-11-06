@@ -11,28 +11,31 @@
 
         <div class="row">
             <div class="col-md-12">
-              <form class="form-horizontal" role="form" action="." method="post">
-                  {% csrf_token %}
-                  <div class="form-group">
-                      <label class="col-sm-5 control-label" for="id_{{ field.name }}">{{ form.report_timeframe.label }}</label>
-                      <div class="col-sm-2">
-                          {{ form.report_timeframe|attr:"class:form-control" }}
-                          {% if form.report_timeframe.help_text %}
-                              <p class="help-block"><small>{{ form.report_timeframe.help_text }}</small></p>
-                          {% endif %}
-                      </div>
-
-                      <div class="form-group">
-                          <div class="col-sm-2">
-                              <button type="submit" class="btn btn-primary">{% trans "Submit" %}</button>
-                          </div>
-                      </div>
-                  </div>
-              </form>
-            </div>
+                <div class="form-group">
+                    <label class="col-sm-2 col-sm-offset-3 control-label makeitright" for="id_sd">Date Range</label>
+                    <div class="col-sm-4"><input id="date"></div>
+                </div>
+            </form>
         </div>
     </div> <!-- /container -->
 {% endblock %}
 
 {% block extra-js %}
+<script>
+  $('#date').daterangepicker();
+
+  $('#date').on('apply.daterangepicker', function(ev, picker) {
+    $.ajax('/get_report_visitor_count', {
+      url: "/get_report_visitor_count",
+      method: "POST",
+      data: {
+        start_date: picker.startDate.format('YYYY-MM-DD'),
+        end_date: picker.endDate.format('YYYY-MM-DD')
+      },
+      cache: false
+    }).done(function(response) {
+
+    })
+  });
+</script>
 {% endblock %}
