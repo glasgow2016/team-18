@@ -153,6 +153,7 @@ class OtherVisitor(models.Model):
 # PRIMARY: Half of used daily visitor identifiers (first names, to be used alongide with time of first contact in the day) which is deleted every night
 class DailyIdentifier(models.Model):
     first_name = models.CharField(max_length=256)
+    time_first_seen = models.DateTimeField() # Remove all references, as it is redundant; it is just being carried around without being used
     visitor = models.OneToOneField(Visitor)
 
     def as_dict(self):

@@ -8,6 +8,9 @@ from django.http import JsonResponse
 
 from datetime import datetime
 
+# Home page, containing the form to quickly input new data;
+#   duplicated entries are avoided by dynamically restricting the Visitors by (temporarily stored) first names
+#   with their time of daily first contact as a  subscript to frther disambiguate people with similar data
 @login_required
 def home(request):
     ActivityFormSet = formset_factory(ActivityForm)
@@ -156,6 +159,7 @@ def ajax_get_autofill_details(request):
 
 
 
+# Account login page
 def login_page(request):
     if request.method == "POST":
         if "username" in request.POST and "password" in request.POST:
@@ -174,15 +178,18 @@ def login_page(request):
     print("Falling back to basic page")
     return render(request, "login.html")
 
+# Account logout page
 @login_required
 def logout_page(request):
     logout(request)
     return redirect('/')
 
+# Non-populated reports page
 @login_required
 def numSeen(request):
     return render(request, "numSeen.html")
 
+# Page of recent Visitors to current location
 @login_required
 def recent(request):
     recent_visitors = Visitor.objects.all().order_by("-visit_date_time").select_related()[:100]
@@ -190,6 +197,7 @@ def recent(request):
     print(len(recent_visitor.activity_set.all()))
     return render(request, "recent.html", {"recent_visitors": recent_visitors})
 
+# Graph count of Visitors per day over a date range
 @login_required
 def ajax_report_visitor_count(request):
     if request.method == "POST":
@@ -210,3 +218,9 @@ def ajax_report_visitor_count(request):
 
         return JsonResponse({"success": True, "leDates": listOfDictOfDates})
     return JsonResponse({"success": False})
+
+
+
+# NOTE & TODO:
+#   Database queries can be performed either by raw SQL queries with my_table.objects.raw("SQL QUERY")
+#   or by using Django models' relationships
